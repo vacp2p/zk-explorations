@@ -3,16 +3,15 @@ use halo2_proofs::circuit:: Value;
 mod circuit;
 
 use circuit::MyCircuit;
+use halo2_proofs::{dev::MockProver, pasta::Fp};
 
 fn main() {
-    use halo2_proofs::{dev::MockProver, pasta::Fp};
-
-    let k = 4;
+    let k = 6;
 
     let constant = Fp::from(7);
     let a = Fp::from(2);
     let b = Fp::from(3);
-    let c = constant * a.square() * b.square();
+    let c = constant * a * a * a * b * b * b;
 
     let circuit = MyCircuit {
         constant,
