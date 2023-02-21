@@ -1,1 +1,1 @@
-# zk-explorations
+# risc0k-explorations

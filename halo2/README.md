@@ -1,1 +1,1 @@
-# zk-explorations
+# halo2-explorations
