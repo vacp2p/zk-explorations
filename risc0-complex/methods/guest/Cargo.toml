@@ -9,4 +9,9 @@ edition = "2021"
 risc0-build = "0.12"
 
 [dependencies]
-risc0-zkvm = { version = "0.12", default-features = false }
+core = { path = "../../core" }
+risc0-zkvm = { version = "0.12", default-features = false, features = [ "std" ] }
+
+[profile.release]
+lto = true
+opt-level = "z"
