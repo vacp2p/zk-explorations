@@ -1,0 +1,11 @@
+[package]
+name = "checker"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+core = { path = "../core" }
+methods = { path = "../methods" }
+rand = "0.8"
+risc0-zkp = "0.12"
+risc0-zkvm = "0.12"
