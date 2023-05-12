@@ -2,6 +2,9 @@ use bellperson::{gadgets::num::AllocatedNum, ConstraintSystem, SynthesisError};
 use ff::PrimeField;
 use nova_snark::traits::circuit::StepCircuit;
 
+#[warn(unused_imports)]
+use crate::prove_verify::prove_and_verify;
+
 #[derive(Clone, Debug)]
 pub struct FibonacciObject<F: PrimeField> {
     pub x: F,
@@ -85,4 +88,24 @@ impl<F: PrimeField> StepCircuit<F> for FibonacciCircuit<F> {
             self.values[self.values.len() - 1].y_next,
         ]
     }
+}
+
+#[test]
+fn test_basic() {
+    prove_and_verify(4, 10);
+}
+
+#[test]
+fn test_medium() {
+    prove_and_verify(5, 50);
+}
+
+#[test]
+fn test_bigger() {
+    prove_and_verify(4, 100);
+}
+
+#[test]
+fn test_huge() {
+    prove_and_verify(10, 4096);
 }
