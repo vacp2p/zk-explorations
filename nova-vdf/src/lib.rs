@@ -1,7 +1,7 @@
-pub mod minroot;
 pub mod error;
-pub mod vdf_proof;
+pub mod minroot;
 pub mod public_params;
+pub mod vdf_proof;
 
 pub const TEST_SEED: [u8; 16] = [42; 16];
 
@@ -17,11 +17,9 @@ use bellperson::{
 
 use ff::{Field, PrimeField};
 
-use nova::{
-    traits::{
-        circuit::{StepCircuit, TrivialTestCircuit},
-        Group,
-    },
+use nova::traits::{
+    circuit::{StepCircuit, TrivialTestCircuit},
+    Group,
 };
 
 use crate::minroot::{Evaluation, MinRootVDF, State};

@@ -1,7 +1,4 @@
-use nova::traits::{
-        circuit::TrivialTestCircuit,
-        Group,
-    };
+use nova::traits::{circuit::TrivialTestCircuit, Group};
 
 use pasta_curves::{pallas, vesta};
 

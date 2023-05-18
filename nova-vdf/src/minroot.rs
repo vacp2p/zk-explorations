@@ -217,7 +217,7 @@ impl MinRootVDF<vesta::Point> for VestaVDF {
     fn inverse_step(x: vesta::Scalar) -> vesta::Scalar {
         x.mul(&x.square().square())
     }
-    
+
     fn forward_step(&mut self, x: vesta::Scalar) -> vesta::Scalar {
         let sqr = |x: vesta::Scalar, i: u32| (0..i).fold(x, |x, _| x.square());
 

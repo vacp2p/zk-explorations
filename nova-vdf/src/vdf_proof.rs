@@ -1,11 +1,14 @@
-
 use bellperson::{gadgets::num::AllocatedNum, ConstraintSystem};
 
-use crate::{error::Error, public_params::{NovaVDFPublicParams, G1, G2, C1, C2, S1, S2}, InverseMinRootCircuit};
+use crate::{
+    error::Error,
+    public_params::{NovaVDFPublicParams, C1, C2, G1, G2, S1, S2},
+    InverseMinRootCircuit,
+};
 
 use nova::{
     errors::NovaError,
-    traits::{Group, circuit::StepCircuit},
+    traits::{circuit::StepCircuit, Group},
     RecursiveSNARK,
 };
 
@@ -81,7 +84,8 @@ impl NovaVDFProof {
         let z0_secondary = Self::z0_secondary();
         let zi_secondary = z0_secondary.clone();
 
-        let (zi_primary_verified, zi_secondary_verified) = self.0.verify(pp, num_steps, z0_primary, z0_secondary)?;
+        let (zi_primary_verified, zi_secondary_verified) =
+            self.0.verify(pp, num_steps, z0_primary, z0_secondary)?;
 
         Ok(zi_primary == zi_primary_verified && zi_secondary == zi_secondary_verified)
     }

@@ -1,10 +1,6 @@
-use bellperson::{ SynthesisError,
-};
+use bellperson::SynthesisError;
 
-
-use nova::{
-    errors::NovaError,
-};
+use nova::errors::NovaError;
 
 #[derive(Debug)]
 pub enum Error {
