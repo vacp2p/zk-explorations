@@ -4,15 +4,15 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-bellperson = { version = "0.24", default-features = false }
+bellperson = { version = "=0.25", default-features = false }
 crossbeam = "=0.8.2"
-ff = "=0.12.1"
-generic-array = "0.14.4"
+ff = "=0.13.0"
+generic-array = "=0.14.7"
 merlin = "=2.0.1"
 neptune = { version = "=9.0.0", default-features = false }
-nova = { package = "nova-snark", version = "=0.20.3", default-features = false }
+nova = { package = "nova-snark", version = "=0.21", default-features = false }
 pairing = "=0.21.0"
-pasta_curves = { version = "=0.5.2", features = ["repr-c", "serde"], package = "fil_pasta_curves" }
+pasta_curves = { version = "=0.5.1", features = ["repr-c", "serde"]}
 pasta-msm = "=0.1.4"
 rand = "=0.8.5"
 subtle = "=2.5.0"

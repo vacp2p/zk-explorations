@@ -328,13 +328,13 @@ where
         State {
             x: self.forward_step(G::Scalar::add(s.x, s.y)),
             y: G::Scalar::add(s.x, s.i),
-            i: G::Scalar::add(s.i, G::Scalar::one()),
+            i: G::Scalar::add(s.i, G::Scalar::from(1)),
         }
     }
 
     /// One round in the fast/inverse direction.
     fn inverse_round(s: State<G::Scalar>) -> State<G::Scalar> {
-        let i = G::Scalar::sub(s.i, &G::Scalar::one());
+        let i = G::Scalar::sub(s.i, &G::Scalar::from(1));
         let x = G::Scalar::sub(s.y, &i);
         let mut y = Self::inverse_step(s.x);
         y.sub_assign(&x);
@@ -497,7 +497,7 @@ mod tests {
             let x = State {
                 x,
                 y,
-                i: G::Scalar::zero(),
+                i: G::Scalar::from(0),
             };
             let result = vdf.eval(x, t);
             let again = V::inverse_eval(result, t);
@@ -517,11 +517,11 @@ mod tests {
         let mut rng = XorShiftRng::from_seed(TEST_SEED);
 
         let x = G::Scalar::random(&mut rng);
-        let y = G::Scalar::zero();
+        let y = G::Scalar::from(0);
         let x = State {
             x,
             y,
-            i: G::Scalar::zero(),
+            i: G::Scalar::from(0),
         };
         let t = 4;
         let n = 3;

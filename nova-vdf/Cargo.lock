@@ -56,46 +56,18 @@ checksum = "d468802bab17cbc0cc575e9b053f41e72aa36bfa6b7f55e3529ffa43161b97fa"
 
 [[package]]
 name = "bellperson"
-version = "0.24.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d1a8623f815c0b1fd89efd9b5f4afbb937f91f51c1ebe3f6dda399c69fa938f3"
-dependencies = [
- "bincode",
- "blake2s_simd 1.0.1",
- "blstrs 0.6.1",
- "byteorder",
- "crossbeam-channel",
- "digest 0.10.7",
- "ec-gpu",
- "ec-gpu-gen 0.5.2",
- "ff 0.12.1",
- "group 0.12.1",
- "log",
- "memmap2",
- "pairing 0.22.0",
- "rand",
- "rand_core 0.6.4",
- "rayon",
- "rustversion",
- "serde",
- "sha2",
- "thiserror",
-]
-
-[[package]]
-name = "bellperson"
 version = "0.25.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "93eaee4b4753554139ae52ecf0e8b8c128cbc561b32e1bfaa32f70cba8518c1f"
 dependencies = [
  "bincode",
  "blake2s_simd 1.0.1",
- "blstrs 0.7.0",
+ "blstrs",
  "byteorder",
  "crossbeam-channel",
  "digest 0.10.7",
  "ec-gpu",
- "ec-gpu-gen 0.6.0",
+ "ec-gpu-gen",
  "ff 0.13.0",
  "group 0.13.0",
  "log",
@@ -211,22 +183,6 @@ dependencies = [
  "threadpool",
  "which",
  "zeroize",
-]
-
-[[package]]
-name = "blstrs"
-version = "0.6.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3ecb6f3a9429706971633edf4b84f922aba9d2e3a7d71bfb450337e64ccb7df0"
-dependencies = [
- "blst",
- "byte-slice-cast",
- "ff 0.12.1",
- "group 0.12.1",
- "pairing 0.22.0",
- "rand_core 0.6.4",
- "serde",
- "subtle",
 ]
 
 [[package]]
@@ -489,28 +445,6 @@ checksum = "bd63582de2b59ea1aa48d7c1941b5d87618d95484397521b3acdfa0e1e9f5e45"
 
 [[package]]
 name = "ec-gpu-gen"
-version = "0.5.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fd09bf9d5313ad60379f70250590bccc10f7a04e2773062ac13255a37022584e"
-dependencies = [
- "bitvec",
- "crossbeam-channel",
- "ec-gpu",
- "execute",
- "ff 0.12.1",
- "group 0.12.1",
- "hex",
- "log",
- "num_cpus",
- "once_cell",
- "rayon",
- "sha2",
- "thiserror",
- "yastl",
-]
-
-[[package]]
-name = "ec-gpu-gen"
 version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "892df2aa20abec5b816e15d5d6383892ca142077708efa3067dd3ac44b75c664"
@@ -586,9 +520,9 @@ dependencies = [
 
 [[package]]
 name = "ff"
-version = "0.12.1"
+version = "0.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d013fc25338cc558c5c2cfbad646908fb23591e2404481826742b651c9af7160"
+checksum = "ded41244b729663b1e574f1b4fb731469f69f79c17667b5d776b16cda0479449"
 dependencies = [
  "bitvec",
  "byteorder",
@@ -598,21 +532,10 @@ dependencies = [
 ]
 
 [[package]]
-name = "ff"
+name = "ff_derive"
 version = "0.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ded41244b729663b1e574f1b4fb731469f69f79c17667b5d776b16cda0479449"
-dependencies = [
- "bitvec",
- "rand_core 0.6.4",
- "subtle",
-]
-
-[[package]]
-name = "ff_derive"
-version = "0.12.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "17db6fa0748f1f66e9dbafba1881009b50614948c0e900f59083afff2f8d784b"
+checksum = "e9f54704be45ed286151c5e11531316eaef5b8f5af7d597b806fdb8af108d84a"
 dependencies = [
  "addchain",
  "cfg-if",
@@ -622,23 +545,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 1.0.109",
-]
-
-[[package]]
-name = "fil_pasta_curves"
-version = "0.5.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3303ea3c462ab949ab95b49f6e6d255d8d9396ebd4f1626ccb34c7037615aa8f"
-dependencies = [
- "blake2b_simd",
- "ff 0.12.1",
- "group 0.12.1",
- "hex",
- "lazy_static",
- "rand",
- "serde",
- "static_assertions",
- "subtle",
 ]
 
 [[package]]
@@ -721,19 +627,6 @@ checksum = "bc5ac374b108929de78460075f3dc439fa66df9d8fc77e8f12caa5165fcf0c89"
 dependencies = [
  "ff 0.11.1",
  "rand_core 0.6.4",
- "subtle",
-]
-
-[[package]]
-name = "group"
-version = "0.12.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5dfbfb3a6cfbd390d5c9564ab283a0349b9b9fcd46a706c1eb10e0db70bfbac7"
-dependencies = [
- "ff 0.12.1",
- "rand",
- "rand_core 0.6.4",
- "rand_xorshift",
  "subtle",
 ]
 
@@ -869,19 +762,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "lurk-pasta-msm"
-version = "0.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "12992280292a2a4ff84591308c426029245d49094c75df079b286f1bb8496e6c"
-dependencies = [
- "cc",
- "fil_pasta_curves",
- "semolina",
- "sppark",
- "which",
-]
-
-[[package]]
 name = "memchr"
 version = "2.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -928,33 +808,13 @@ dependencies = [
 
 [[package]]
 name = "neptune"
-version = "8.1.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0d47b29bc49c7d957eb446e298f96cd7088829e2d7a549ab04b36bc82434e27b"
-dependencies = [
- "bellperson 0.24.1",
- "blake2s_simd 0.5.11",
- "blstrs 0.6.1",
- "byteorder",
- "ff 0.12.1",
- "fil_pasta_curves",
- "generic-array 0.14.7",
- "itertools 0.8.2",
- "lazy_static",
- "log",
- "serde",
- "trait-set",
-]
-
-[[package]]
-name = "neptune"
 version = "9.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4227e5557caad6d2a910b7770f2479f0c9aeb8ddc1dc537623cb6ffec7f01d31"
 dependencies = [
- "bellperson 0.25.0",
+ "bellperson",
  "blake2s_simd 0.5.11",
- "blstrs 0.7.0",
+ "blstrs",
  "byteorder",
  "ff 0.13.0",
  "generic-array 0.14.7",
@@ -967,25 +827,25 @@ dependencies = [
 
 [[package]]
 name = "nova-snark"
-version = "0.20.3"
+version = "0.21.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b09c8cf02c93500dee9244cd73547f20d133ca6d3fbbe9eae0205e5b2db05f36"
+checksum = "d6247c61ab29e5da01c8f80403c25c40956045f0343d79793a2675bf7775dd80"
 dependencies = [
- "bellperson 0.24.1",
+ "bellperson",
  "bincode",
  "bitvec",
  "byteorder",
  "digest 0.8.1",
- "ff 0.12.1",
- "fil_pasta_curves",
+ "ff 0.13.0",
  "flate2",
  "generic-array 0.14.7",
  "itertools 0.9.0",
- "lurk-pasta-msm",
- "neptune 8.1.1",
+ "neptune",
  "num-bigint 0.4.3",
  "num-integer",
  "num-traits",
+ "pasta-msm",
+ "pasta_curves",
  "rand_chacha",
  "rand_core 0.6.4",
  "rayon",
@@ -999,17 +859,17 @@ dependencies = [
 name = "nova-vdf"
 version = "0.1.0"
 dependencies = [
- "bellperson 0.24.1",
+ "bellperson",
  "criterion",
  "crossbeam",
- "ff 0.12.1",
- "fil_pasta_curves",
+ "ff 0.13.0",
  "generic-array 0.14.7",
  "merlin",
- "neptune 9.0.0",
+ "neptune",
  "nova-snark",
  "pairing 0.21.0",
  "pasta-msm",
+ "pasta_curves",
  "rand",
  "rand_xorshift",
  "subtle",
@@ -1093,15 +953,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f2e415e349a3006dd7d9482cdab1c980a845bed1377777d768cb693a44540b42"
 dependencies = [
  "group 0.11.0",
-]
-
-[[package]]
-name = "pairing"
-version = "0.22.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "135590d8bdba2b31346f9cd1fb2a912329f5135e832a4f422942eb6ead8b6b3b"
-dependencies = [
- "group 0.12.1",
 ]
 
 [[package]]

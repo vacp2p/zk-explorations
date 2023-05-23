@@ -99,7 +99,7 @@ where
             || "final_i matches final_i_num",
             |lc| lc + final_i.get_variable(),
             |lc| lc + CS::one(),
-            |_| final_i_num.lc(G::Scalar::one()),
+            |_| final_i_num.lc(G::Scalar::from(1)),
         );
 
         let res = vec![final_x, final_y, final_i];
@@ -164,7 +164,7 @@ fn inverse_round<CS: ConstraintSystem<F>, F: PrimeField>(
             new_x.get_value().ok_or(SynthesisError::AssignmentMissing)?,
             y.get_value().ok_or(SynthesisError::AssignmentMissing)?
                 - i.get_value().ok_or(SynthesisError::AssignmentMissing)?
-                + F::one()
+                + F::from(1)
         );
 
         debug_assert_eq!(
@@ -173,7 +173,7 @@ fn inverse_round<CS: ConstraintSystem<F>, F: PrimeField>(
             new_y.get_value().ok_or(SynthesisError::AssignmentMissing)?
                 + y.get_value().ok_or(SynthesisError::AssignmentMissing)?
                 - i.get_value().ok_or(SynthesisError::AssignmentMissing)?
-                + F::one()
+                + F::from(1)
         );
     }
 
