@@ -5,17 +5,17 @@ edition = "2021"
 
 [dependencies]
 bellperson = { version = "0.24", default-features = false }
-crossbeam = "0.8"
-ff = "0.12.0"
+crossbeam = "=0.8.2"
+ff = "=0.12.1"
 generic-array = "0.14.4"
-merlin = "2.0.0"
-neptune = { version = "9.0.0", default-features = false }
-nova = { package = "nova-snark", version = "0.20.3", default-features = false }
-pairing = "0.21"
-pasta_curves = { version = "0.5.2", features = ["repr-c", "serde"], package = "fil_pasta_curves" }
-pasta-msm = "0.1.1"
-rand = "0.8"
-subtle = "2.3"
+merlin = "=2.0.1"
+neptune = { version = "=9.0.0", default-features = false }
+nova = { package = "nova-snark", version = "=0.20.3", default-features = false }
+pairing = "=0.21.0"
+pasta_curves = { version = "=0.5.2", features = ["repr-c", "serde"], package = "fil_pasta_curves" }
+pasta-msm = "=0.1.4"
+rand = "=0.8.5"
+subtle = "=2.5.0"
 
 [dev-dependencies]
 criterion = "0.3"
