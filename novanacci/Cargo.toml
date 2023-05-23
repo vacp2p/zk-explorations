@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-nova-snark = { version = "=0.20.3"}
-bellperson = { version = "=0.24", default-features = false }
-ff = { version = "=0.12.0", features = ["derive"] }
-pasta_curves = { version = "=0.5.2", features = ["repr-c", "serde"], package = "fil_pasta_curves" }
+nova-snark = { version = "=0.21"}
+bellperson = { version = "=0.25", default-features = false }
+ff = { version = "=0.13.0", features = ["derive"] }
+pasta_curves = { version = "=0.5.1", features = ["repr-c", "serde"] }

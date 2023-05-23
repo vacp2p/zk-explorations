@@ -61,7 +61,7 @@ impl<F: PrimeField> StepCircuit<F> for FibonacciCircuit<F> {
             let y_next = AllocatedNum::alloc(cs.namespace(|| format!("y_next_{i}")), || {
                 Ok(self.values[i].y_next)
             })?;
-            let dummy = AllocatedNum::alloc(cs.namespace(|| format!("one_{i}")), || Ok(F::one()))?;
+            let dummy = AllocatedNum::alloc(cs.namespace(|| format!("one_{i}")), || Ok(F::from(1)))?;
 
             cs.enforce(
                 || format!("y_next_{i} * 1 = x_{i} + y_{i}"),
