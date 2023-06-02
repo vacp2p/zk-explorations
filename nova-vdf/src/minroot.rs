@@ -44,8 +44,6 @@ impl MinRootVDF<pallas::Point> for PallasVDF {
         PallasVDF { eval_mode }
     }
 
-    // To bench with this on 3970x:
-    // RUSTFLAG="-C target-cpu=native -g" taskset -c 0,40 cargo bench
     fn eval(&mut self, x: State<pallas::Scalar>, t: u64) -> State<pallas::Scalar> {
         match self.eval_mode {
             EvalMode::LTRSequential
@@ -202,6 +200,7 @@ impl MinRootVDF<vesta::Point> for VestaVDF {
         VestaVDF {}
     }
 
+    /// Returns an element in `vesta::Scalar` field that corresponds to a `u64`'s n
     fn element(n: u64) -> vesta::Scalar {
         vesta::Scalar::from(n)
     }
@@ -214,6 +213,7 @@ impl MinRootVDF<vesta::Point> for VestaVDF {
         5
     }
 
+    // Takes x to the inverse power, which in our case is 5.
     fn inverse_step(x: vesta::Scalar) -> vesta::Scalar {
         x.mul(&x.square().square())
     }
@@ -259,7 +259,6 @@ impl MinRootVDF<vesta::Point> for VestaVDF {
     }
 }
 
-// Question: Is this right, or is it the reverse? Which scalar fields' modulus do we want to target?
 pub type TargetVDF<'a> = PallasVDF;
 
 #[derive(std::cmp::PartialEq, Debug, Clone, Copy)]
@@ -282,6 +281,7 @@ const FQ_RESCUE_INVALPHA: [u64; 4] = [
     0x3333333333333333,
 ];
 
+/// Trait for the MinRoot function defined here https://eprint.iacr.org/2022/1626.pdf
 pub trait MinRootVDF<G>: Debug
 where
     G: Group,
