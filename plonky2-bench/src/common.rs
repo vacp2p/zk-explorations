@@ -5,11 +5,8 @@ use plonky2::plonk::circuit_builder::CircuitBuilder;
 use plonky2::plonk::circuit_data::{CircuitConfig, CommonCircuitData};
 use plonky2::plonk::config::{AlgebraicHasher, GenericConfig};
 
-pub fn common_data<
-    F: RichField + Extendable<D>,
-    C: GenericConfig<D, F = F>,
-    const D: usize,
->() -> CommonCircuitData<F, D>
+pub fn common_data<F: RichField + Extendable<D>, C: GenericConfig<D, F = F>, const D: usize>(
+) -> CommonCircuitData<F, D>
 where
     C::Hasher: AlgebraicHasher<F>,
 {
