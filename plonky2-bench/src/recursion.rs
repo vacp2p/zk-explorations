@@ -37,7 +37,6 @@ pub fn recursion(d: usize) -> Result<()> {
 
     let condition = builder.add_virtual_bool_target_safe();
 
-    // Unpack inner proof's public inputs.
     let inner_cyclic_proof_with_pis = builder.add_virtual_proof_with_pis(&common_data);
     let inner_cyclic_pis = &inner_cyclic_proof_with_pis.public_inputs;
     let inner_cyclic_initial_hash = HashOutTarget::try_from(&inner_cyclic_pis[0..4]).unwrap();
@@ -97,7 +96,6 @@ pub fn recursion(d: usize) -> Result<()> {
         &cyclic_circuit_data.common,
     )?;
 
-    // Verify that the proof correctly computes a repeated hash.
     let initial_hash = &proof.public_inputs[..4];
     let hash = &proof.public_inputs[4..8];
     let counter = proof.public_inputs[8];
