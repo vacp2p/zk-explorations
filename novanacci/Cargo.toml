@@ -1,0 +1,10 @@
+[package]
+name = "novanacci"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+nova-snark = { version = "=0.21"}
+bellperson = { version = "=0.25", default-features = false }
+ff = { version = "=0.13.0", features = ["derive"] }
+pasta_curves = { version = "=0.5.1", features = ["repr-c", "serde"] }
