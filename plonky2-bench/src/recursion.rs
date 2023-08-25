@@ -18,6 +18,12 @@ pub fn recursion(d: usize) -> Result<()> {
     type C = PoseidonGoldilocksConfig;
     type F = <C as GenericConfig<D>>::F;
 
+    if d == 0 {
+        return Err(anyhow::Error::msg("recursion count has to be at least 1"));
+    }
+
+    let d = d - 1;
+
     let config = CircuitConfig::standard_recursion_config();
     let mut builder = CircuitBuilder::<F, D>::new(config);
     let one = builder.one();
