@@ -1,6 +1,6 @@
 use anyhow::Result;
 
-use plonky2::field::types::{Field, PrimeField64};
+use plonky2::field::types::Field;
 use plonky2::hash::hash_types::{HashOutTarget, RichField};
 use plonky2::hash::hashing::hash_n_to_hash_no_pad;
 use plonky2::hash::poseidon::{PoseidonHash, PoseidonPermutation};
@@ -22,11 +22,18 @@ pub fn recursion(d: usize) -> Result<()> {
         return Err(anyhow::Error::msg("recursion count has to be at least 1"));
     }
 
+    let initial_hash = [F::ZERO, F::ONE, F::TWO, F::from_canonical_usize(3)];
+    let expected_hash: [F; 4] = iterate_poseidon(
+        initial_hash,
+        d,
+    );
+
     let d = d - 1;
 
     let config = CircuitConfig::standard_recursion_config();
     let mut builder = CircuitBuilder::<F, D>::new(config);
     let one = builder.one();
+
 
     let initial_hash_target = builder.add_virtual_hash();
     builder.register_public_inputs(&initial_hash_target.elements);
@@ -73,7 +80,7 @@ pub fn recursion(d: usize) -> Result<()> {
     let cyclic_circuit_data = builder.build::<C>();
 
     let mut pw = PartialWitness::new();
-    let initial_hash = [F::ZERO, F::ONE, F::TWO, F::from_canonical_usize(3)];
+
     let initial_hash_pis = initial_hash.into_iter().enumerate().collect();
     pw.set_bool_target(condition, false);
     pw.set_proof_with_pis_target::<C, D>(
@@ -101,13 +108,8 @@ pub fn recursion(d: usize) -> Result<()> {
         &cyclic_circuit_data.common,
     )?;
 
-    let initial_hash = &proof.public_inputs[..4];
     let hash = &proof.public_inputs[4..8];
-    let counter = proof.public_inputs[8];
-    let expected_hash: [F; 4] = iterate_poseidon(
-        initial_hash.try_into().unwrap(),
-        counter.to_canonical_u64() as usize,
-    );
+    
     if hash != expected_hash {
         return Err(anyhow::Error::msg("hash was not calculated right"));
     }
