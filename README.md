@@ -4,6 +4,10 @@ This is a working repository for the zkVM team.
 
 Here we are trying out various proof systems for functionality and performance.
 
+## Benchmarks
+
+We initiate our exploration into different Zero-knowledge proof systems by showcasing a consistent benchmark analysis using Poseidon across diverse circuits. Even though there are various other primitives for benchmarking, we’ve zeroed in on Poseidon due to its design since it allows for fewer constraints in the circuit, leading to faster proving times and potentially smaller proof sizes. Our goal is to conduct a thorough review of Poseidon’s performance across an array of zk-SNARK and zk-STARK circuit platforms, namely Nova, Halo2, Starky, and Plonky. By drawing these comparisons, our intention is to have a comprehensive view of the strengths and limitations of each tool. With this knowledge, we aspire to pinpoint the ideal framework for our specific needs.
+
 ## Contents
 
 Currently there are the following subprojects here:
@@ -26,3 +30,4 @@ For UNIX/Linux based systems it is done using:
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 Along with Rust you get Cargo installed ass well, so you don't need to deel with it separately.
+
