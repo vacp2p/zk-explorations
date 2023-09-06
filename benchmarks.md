@@ -1,3 +1,5 @@
+## Introduction
+
 In this project, we embark on a journey to understand various Zero-knowledge proof systems, 
 highlighting a consistent benchmark analysis of Poseidon across multiple circuits. 
 While there are several other benchmarking tools available, we chose Poseidon due to its unique design, 
