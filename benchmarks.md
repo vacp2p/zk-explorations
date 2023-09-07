@@ -41,7 +41,7 @@ When utilizing the non-interactive variant of the folding method for relaxed R1C
 the verifier’s expenses remain consistent, leading to a verifier circuit of constant size, primarily influenced by two group scalar multiplications. 
 The work required by the prover at each juncture is majorly defined by two multiexponentiations, roughly mirroring the magnitude of the incremental computation |F|.
 
- Nova’s methodology paves the way for executing IVC with a concise verifier circuit and streamlined prover calculations. 
+    Nova’s methodology paves the way for executing IVC with a concise verifier circuit and streamlined prover calculations. 
  It sidesteps the need for FFTs and can be effectively set up using any elliptic curve cycles where the Discrete Logarithm Problem (DLOG) poses challenges.
  Furthermore, Nova integrates a proficient zero-knowledge succinct non-interactive argument (zkSNARK) to succinctly and confidentially validate the possession of legitimate IVC proofs. 
  This ensures a brief, confidential validation of a genuine IVC demonstration.
@@ -50,7 +50,7 @@ The work required by the prover at each juncture is majorly defined by two multi
 It’s noteworthy that Halo2 relies on the discrete log assumption over standard cycles of elliptic curves. This protocol is adept at incrementally verifying extensive computational tasks. 
 Among its innovative techniques, Halo2 introduces the utilization of a unique 2-cycle of elliptic curves, aptly named Tweedledum and Tweedledee. 
 
- Additionally, it harnesses specific endomorphisms to minimize the verification circuit’s size. Designed with a keen focus on efficiency, 
+     Additionally, it harnesses specific endomorphisms to minimize the verification circuit’s size. Designed with a keen focus on efficiency, 
 Halo2 ensures that both proof size and verification time remain consistent, irrespective of the recursion depth. 
 When benchmarked against other proposed protocols, Halo2 shines in terms of proof size, recursion threshold, and potentially in reducing both proving time and memory demands.
 
@@ -61,7 +61,7 @@ A standout characteristic of Plonky2 is its proficiency in condensing extensive 
 Depending on specific security and latency needs, Plonky2 has the capability to reduce any proof to an approximate size of 43 kilobytes. 
 This compression is realized through recursive techniques, facilitating the minimization of even the most extensive proofs.
 
- From a performance standpoint, Plonky2 is engineered for speed. A standard laptop can produce a recursive proof in roughly 300 milliseconds with Plonky2. 
+     From a performance standpoint, Plonky2 is engineered for speed. A standard laptop can produce a recursive proof in roughly 300 milliseconds with Plonky2. 
 This efficiency positions it as an ideal choice for real-world scenarios demanding swift proof creation.
 In summary, Plonky2 brings to the table a swift recursive composition, augmented prover efficiency via a 64-bit field representation, 
 and the prowess to consistently condense extensive proofs. These attributes underscore its significance in the realm of cryptographic argument implementations.
@@ -70,7 +70,7 @@ and the prowess to consistently condense extensive proofs. These attributes unde
 Plonky2 is specifically designed for recursion and heavily relies on custom gates. In contrast, Starky can be described as Plonky2 stripped of PLONK-specific elements.
 One of Starky’s notable strengths is its speed. This is attributed to its transition constraints, where a constraint on degree 3 leads to a rate of 2. 
 
- On the other hand, Plonky2 imposes limitations on the degree of constraints, preventing them from being too low, typically at degree 5. 
+    On the other hand, Plonky2 imposes limitations on the degree of constraints, preventing them from being too low, typically at degree 5. 
 A smaller rate translates to a faster proof, making Starky more efficient in this regard.
 
 # Circuit Implementation
