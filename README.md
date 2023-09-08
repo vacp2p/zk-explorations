@@ -11,6 +11,7 @@ Currently there are the following subprojects here:
 - [risc0](https://github.com/risc0/risc0) basic [circuit](./risc0/README.md)
 - novanacci - [Fibonacci](https://en.wikipedia.org/wiki/Fibonacci_sequence) [circuit](./novanacci/README.md) written in vanilla (Bellman) [Nova](https://github.com/microsoft/Nova)
 - plonky2-bench - [Poseidon hashing](https://www.poseidon-hash.info/) [circuit](./plonky2-bench/README.md) written in [Plonky2](https://github.com/mir-protocol/plonky2)
+- [Benchmark explanation](./benchmarks.md)
 
 ## Future plans
 
@@ -26,3 +27,4 @@ For UNIX/Linux based systems it is done using:
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 Along with Rust you get Cargo installed ass well, so you don't need to deel with it separately.
+
