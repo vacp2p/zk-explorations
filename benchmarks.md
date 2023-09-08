@@ -1,11 +1,17 @@
 # Introduction
 
-In this project, we embark on a journey to understand various Zero-knowledge proof systems, highlighting a consistent benchmark analysis of Poseidon across multiple circuits. 
-While there are several other benchmarking tools available, we chose Poseidon due to its unique design, 
+In this project, we embark on a journey to understand various Zero-knowledge proof systems with recursive capability, 
+highlighting a consistent benchmark analysis of Poseidon across multiple circuits. 
+While there are different computational layouts we could benchmark, we chose Poseidon due to its unique design, 
 which offers fewer constraints in the circuit. This results in quicker proving times and possibly reduced proof sizes. 
-We aim to meticulously evaluate Poseidon’s efficiency on zk-SNARK and zk-STARK circuit platforms like Nova, Halo2, Plonky2, and Starky. 
+In fact, Poseidon is explicitly tailored for optimal SNARK performance and has gained immense popularity in nearly every project that incorporates SNARKs. 
+Thus, not only is it more efficiently optimized, but it also represents a common workload in SNARK-based systems. 
+This makes our testing more representative of real-world scenarios and less theoretical.
+We aim to meticulously evaluate Poseidon’s efficiency on zk-SNARK and zk-STARK circuit platforms like Nova, Halo2 (Halo2 + KZG), Plonky2, and Starky. 
 Through this comparison, we seek a holistic understanding of the advantages and drawbacks of each platform. 
 Armed with this insight, we hope to determine the best framework tailored to our requirements.
+
+
 
 
 # Considerations for Benchmarks
@@ -13,8 +19,7 @@ Armed with this insight, we hope to determine the best framework tailored to our
 Evaluating various zero-knowledge proof systems is important, given the swift advancements in the field. 
 When planning to benchmark these systems, we will try to adopt the following steps:
 
-* First of all, we should select the parameters for evaluation. Commonly used metrics include: time taken for proof, 
-verification duration, size of the proof, and memory consumption.
+* First of all, we should select the parameters for evaluation. Commonly used metrics include: proof time, verifier time, proof size, and peak memory consumption.
 
 * We should make sure that tests are being conducted under identical conditions, such as the hardware and the operating system.
 
@@ -52,7 +57,7 @@ Among its innovative techniques, Halo2 introduces the utilization of a unique 2-
 
      Additionally, it harnesses specific endomorphisms to minimize the verification circuit’s size. Designed with a keen focus on efficiency, 
 Halo2 ensures that both proof size and verification time remain consistent, irrespective of the recursion depth. 
-When benchmarked against other proposed protocols, Halo2 shines in terms of proof size, recursion threshold, and potentially in reducing both proving time and memory demands.
+When benchmarked against other proposed protocols, Halo2 shines in terms of proof size, recursion threshold, and in reducing proving time.
 
 * _Plonky2_: Plonky2 represents a cryptographic argument system designed for rapid recursive composition. While it’s grounded in the TurboPLONK arithmetization framework, 
 it diverges by integrating the FRI (Fast Reed- Solomon Interactive Oracle Proof) into its polynomial testing approach. 
@@ -161,8 +166,7 @@ the benefits of recursion often stand out, especially in applications demanding 
 
 When benchmarking cryptographic systems, ensuring a fair comparison is paramount. Here's why using Halo2 with recursion is a fair choice when comparing it to Nova:
 
-* _Proof Aggregation_: Both Halo2 with recursion and Nova aim to aggregate multiple proofs into a single, compact proof. 
-This aggregation is a primary feature of recursive systems and is crucial for scalability. By comparing both systems with this feature, 
+* _Proof Aggregation_: Proof aggregation is a primary feature of recursive systems and is crucial for scalability. By comparing both systems with this feature, 
 we're examining their ability to handle a large volume of proofs, which is the purpose of our project.
 
 * _Compactness_: Recursive systems, by their nature, produce compact proofs regardless of the number of aggregated proofs. 
