@@ -1,8 +1,7 @@
-use anyhow::Result;
-
-pub mod common;
 pub mod recursion;
+pub mod mycircuit;
 
-fn main() {//-> Result<()> {
-    recursion::recursion(2);
+
+fn main() {
+    println!("{}", recursion::recursion(2));
 }
