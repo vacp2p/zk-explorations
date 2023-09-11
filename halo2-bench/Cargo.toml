@@ -4,5 +4,12 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+snark-verifier-sdk = {git = "https://github.com/privacy-scaling-explorations/snark-verifier", branch = "main"}
 plonky2 = "0.1.3"
 anyhow = "1.0.71"
+halo2_proofs = { git = "https://github.com/zcash/halo2", rev = "b60e9a4eb6632da1c7d67ffc68d2137450c76bb3"}
+halo2_gadgets = { git = "https://github.com/zcash/halo2", rev = "b60e9a4eb6632da1c7d67ffc68d2137450c76bb3"}
+ff = "0.13"
+rand = "0.8"
+pasta_curves = "0.5"
+criterion = "0.3"
