@@ -50,6 +50,7 @@ pub(crate) fn recursion<S, const WIDTH: usize, const RATE: usize, const L: usize
 where
     S: Spec<Fr, WIDTH, RATE> + Copy + Clone,
 {
+    assert!(d > 1, "d must be larger than 1");
     let d = d - 1;
 
     let empty_circuit = HashCircuit::<S, WIDTH, RATE, L> {
@@ -57,43 +58,80 @@ where
         _spec: PhantomData,
     };
 
-    let mut rng = OsRng;
+    let rng = OsRng;
 
     let params = ParamsKZG::<Bn256>::setup(K, OsRng);
 
     let vk = keygen_vk(&params, &empty_circuit).unwrap();
     let pk = keygen_pk(&params, vk, &empty_circuit).unwrap();
 
-    //    let messages: Vec<[Fr; L]> = Vec::new();
+    let mut messages: Vec<[Fr; L]> = Vec::new();
+    let mut circuits: Vec<HashCircuit<S, WIDTH, RATE, L>> = Vec::new();
+    let proofs: Vec<Vec<u8>> = Vec::new();
 
-    let message: [Fr; L] = (0..L)
-        .map(|_| Fr::ONE)
-        .collect::<Vec<_>>()
-        .try_into()
-        .unwrap();
+    messages.push(
+        (0..L)
+            .map(|_| Fr::ONE)
+            .collect::<Vec<_>>()
+            .try_into()
+            .unwrap(),
+    );
 
-    let output = poseidon::Hash::<_, S, ConstantLength<L>, WIDTH, RATE>::init().hash(message);
-
-    let circuit = HashCircuit::<S, WIDTH, RATE, L> {
-        message: Value::known(message),
+    circuits.push(HashCircuit::<S, WIDTH, RATE, L> {
+        message: Value::known(messages[0]),
         _spec: PhantomData,
-    };
+    });
+
+    let mut output: Fr;
+
+    for i in 0..d {
+        output = poseidon::Hash::<_, S, ConstantLength<L>, WIDTH, RATE>::init().hash(messages[i]);
+
+        messages.push(
+            (0..L)
+                .map(|_| output)
+                .collect::<Vec<_>>()
+                .try_into()
+                .unwrap(),
+        );
+
+        circuits.push(HashCircuit::<S, WIDTH, RATE, L> {
+            message: Value::known(messages[i]),
+            _spec: PhantomData,
+        });
+    }
+
+    /*
+    for j in [0..d] {
+        proofs.push({
+            let mut transcript = Blake2bWrite::<_, G1Affine, Challenge255<_>>::init(vec![]);
+            create_proof::<KZGCommitmentScheme<Bn256>, ProverGWC<_>, _, _, _, _>(
+                &params,
+                &pk,
+                &[circuits[i]],
+                &[&[&[messages[i][0]]]],
+                rng,
+                &mut transcripts[i],
+            )
+            .unwrap();
+            transcript.finalize()
+        });
+    }*/
 
     let proof: Vec<u8> = {
         let mut transcript = Blake2bWrite::<_, G1Affine, Challenge255<_>>::init(vec![]);
         create_proof::<KZGCommitmentScheme<Bn256>, ProverGWC<_>, _, _, _, _>(
             &params,
             &pk,
-            &[circuit],
-            &[&[&[output]]],
-            OsRng,
+            &[circuits[0]],
+            &[&[&[messages[1][0]]]],
+            rng,
             &mut transcript,
         )
         .unwrap();
         transcript.finalize()
     };
 
-    /*
     let accept = {
         let mut transcript = Blake2bRead::<_, G1Affine, _>::init(proof.as_slice());
         VerificationStrategy::<_, VerifierGWC<_>>::finalize(
@@ -101,12 +139,12 @@ where
                 &params.verifier_params(),
                 &pk.get_vk(),
                 AccumulatorStrategy::new(params.verifier_params()),
-                &[&[&message]],
+                &[&[&messages[0]]],
                 &mut transcript,
             )
             .unwrap(),
         )
     };
-    assert!(accept);
-    */
+
+    println!("{}", accept);
 }
