@@ -1,135 +1,112 @@
-
-use ff::Field;
+//use ff::Field;
 use halo2_proofs::{
     circuit::{Layouter, SimpleFloorPlanner, Value},
-    pasta::Fp,
     plonk::{
         create_proof, keygen_pk, keygen_vk, verify_proof, Advice, Circuit, Column,
-        ConstraintSystem, Error, Instance, SingleVerifier,
+        ConstraintSystem, Error, Instance,
     },
-    poly::commitment::Params,
-    transcript::{Blake2bRead, Blake2bWrite, Challenge255},
+    poly::{
+        commitment::ParamsProver,
+        //Next we replace ipa with kzg!
+        /*ipa::{
+            commitment::{IPACommitmentScheme, ParamsIPA},
+            multiopen::ProverIPA,
+            strategy::SingleStrategy,
+        },*/
+        kzg::{
+            commitment::{KZGCommitmentScheme, ParamsKZG},
+            multiopen::{ProverGWC, VerifierGWC},
+            strategy::{AccumulatorStrategy, SingleStrategy},
+        },
+        VerificationStrategy,
+    },
+    transcript::{
+        Blake2bRead, Blake2bWrite, Challenge255, TranscriptReadBuffer, TranscriptWrite,
+        TranscriptWriterBuffer,
+    },
 };
-use pasta_curves::{pallas, vesta};
+
+use halo2_proofs::halo2curves::{
+    bn256::{Bn256, Fr, G1Affine},
+    ff::Field,
+};
 
 use halo2_gadgets::poseidon::{
     primitives::{self as poseidon, generate_constants, ConstantLength, Mds, Spec},
     Hash, Pow5Chip, Pow5Config,
 };
+use snark_verifier::system::halo2::transcript::evm::EvmTranscript;
 use std::convert::TryInto;
 use std::marker::PhantomData;
 
 use criterion::{criterion_group, criterion_main, Criterion};
 use rand::rngs::OsRng;
 
-use crate::mycircuit;
-
-#[derive(Debug, Clone, Copy)]
-struct MySpec<const WIDTH: usize, const RATE: usize>;
-
-impl<const WIDTH: usize, const RATE: usize> Spec<Fp, WIDTH, RATE> for MySpec<WIDTH, RATE> {
-    fn full_rounds() -> usize {
-        8
-    }
-
-    fn partial_rounds() -> usize {
-        56
-    }
-
-    fn sbox(val: Fp) -> Fp {
-        val.pow_vartime(&[5])
-    }
-
-    fn secure_mds() -> usize {
-        0
-    }
-
-    fn constants() -> (Vec<[Fp; WIDTH]>, Mds<Fp, WIDTH>, Mds<Fp, WIDTH>) {
-        generate_constants::<_, Self, WIDTH, RATE>()
-    }
-}
+use crate::mycircuit::HashCircuit;
 
 const K: u32 = 7;
 
-pub fn recursion(d: usize) {
-    //criterion_group!(benches, criterion_benchmark);
-    //criterion_main!(benches);
-    //TODO: make recursion and bench_poseidon a single function. Currently two due to MySpec issues.
-    bench_poseidon::<MySpec<3,2>, 3, 2, 4>(d);
-}
-
-
-fn bench_poseidon<S, const WIDTH: usize, const RATE: usize, const L : usize>(
-    //name: &str,
-    //c: &mut Criterion,
-    d : usize,
-) //-> bool 
+pub(crate) fn recursion<S, const WIDTH: usize, const RATE: usize, const L: usize>(d: usize)
 where
-    S: Spec<Fp, WIDTH, RATE> + Copy + Clone,
+    S: Spec<Fr, WIDTH, RATE> + Copy + Clone,
 {
-   // let mut c:Criterion = Criterion::default();
-    // Initialize the polynomial commitment parameters
-    let params: Params<vesta::Affine> = Params::new(K); //Why 7?
+    let d = d - 1;
 
-    let empty_circuit = mycircuit::HashCircuit::<S, WIDTH, RATE, L> {
+    let empty_circuit = HashCircuit::<S, WIDTH, RATE, L> {
         message: Value::unknown(),
         _spec: PhantomData,
     };
 
-    //TODO: ISSUE HERE!
-    // Initialize the proving key
-    let vk = keygen_vk(&params, &empty_circuit).expect("keygen_vk should not fail");
-   // let pk = keygen_pk(&params, vk, &empty_circuit).expect("keygen_pk should not fail");
-
-    let prover_name = "prover";
-    let verifier_name = "verifier";
-
     let mut rng = OsRng;
 
-    //let mut messages : Vec<[Fp;L]> = Vec::new();
+    let params = ParamsKZG::<Bn256>::setup(K, OsRng);
 
-    let mut message : [Fp;L] =  (0..L)
-        .map(|_| pallas::Base::random(rng))
+    let vk = keygen_vk(&params, &empty_circuit).unwrap();
+    let pk = keygen_pk(&params, vk, &empty_circuit).unwrap();
+
+    //    let messages: Vec<[Fr; L]> = Vec::new();
+
+    let message: [Fr; L] = (0..L)
+        .map(|_| Fr::ONE)
         .collect::<Vec<_>>()
         .try_into()
         .unwrap();
 
-    //Fix this.
-    /*
-    for i in 0..d {
-        messages.push(
-            poseidon::Hash::<_, S, ConstantLength<L>, WIDTH, RATE>::init().hash(messages[i])
-        );
-    }*/
-
-    
     let output = poseidon::Hash::<_, S, ConstantLength<L>, WIDTH, RATE>::init().hash(message);
 
-
-    let circuit = mycircuit::HashCircuit::<S, WIDTH, RATE, L> {
+    let circuit = HashCircuit::<S, WIDTH, RATE, L> {
         message: Value::known(message),
         _spec: PhantomData,
     };
-    
 
-    // Create a proof
+    let proof: Vec<u8> = {
+        let mut transcript = Blake2bWrite::<_, G1Affine, Challenge255<_>>::init(vec![]);
+        create_proof::<KZGCommitmentScheme<Bn256>, ProverGWC<_>, _, _, _, _>(
+            &params,
+            &pk,
+            &[circuit],
+            &[&[&[output]]],
+            OsRng,
+            &mut transcript,
+        )
+        .unwrap();
+        transcript.finalize()
+    };
+
     /*
-    let mut transcript = Blake2bWrite::<_, _, Challenge255<_>>::init(vec![]);
-    create_proof(
-        &params,
-        &pk,
-        &[circuit],
-        &[&[&[output]]],
-        &mut rng,
-        &mut transcript,
-    )
-    .expect("proof generation should not fail");
-*/
-    //let proof = transcript.finalize();
-
-    //let strategy = SingleVerifier::new(&params);
-    //let mut transcript = Blake2bRead::<_, _, Challenge255<_>>::init(&proof[..]);
-    
-    //verify_proof( &params, pk.get_vk(), strategy, &[&[&[output]]], &mut transcript).is_ok()
-
+    let accept = {
+        let mut transcript = Blake2bRead::<_, G1Affine, _>::init(proof.as_slice());
+        VerificationStrategy::<_, VerifierGWC<_>>::finalize(
+            verify_proof::<_, VerifierGWC<_>, _, _, _>(
+                &params.verifier_params(),
+                &pk.get_vk(),
+                AccumulatorStrategy::new(params.verifier_params()),
+                &[&[&message]],
+                &mut transcript,
+            )
+            .unwrap(),
+        )
+    };
+    assert!(accept);
+    */
 }
