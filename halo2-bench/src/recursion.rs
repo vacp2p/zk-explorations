@@ -77,13 +77,15 @@ where
             .unwrap(),
     );
 
+    let output = poseidon::Hash::<_, S, ConstantLength<L>, WIDTH, RATE>::init().hash(messages[0]);
+
     circuits.push(HashCircuit::<S, WIDTH, RATE, L> {
         message: Value::known(messages[0]),
         _spec: PhantomData,
     });
 
-    let mut output: Fr;
 
+    /*
     for i in 0..d {
         output = poseidon::Hash::<_, S, ConstantLength<L>, WIDTH, RATE>::init().hash(messages[i]);
 
@@ -101,7 +103,7 @@ where
         });
     }
 
-    /*
+    
     for j in [0..d] {
         proofs.push({
             let mut transcript = Blake2bWrite::<_, G1Affine, Challenge255<_>>::init(vec![]);
@@ -124,7 +126,7 @@ where
             &params,
             &pk,
             &[circuits[0]],
-            &[&[&[messages[1][0]]]],
+            &[&[&[output]]],
             rng,
             &mut transcript,
         )
@@ -139,7 +141,7 @@ where
                 &params.verifier_params(),
                 &pk.get_vk(),
                 AccumulatorStrategy::new(params.verifier_params()),
-                &[&[&messages[0]]],
+                &[&[&[output]]],
                 &mut transcript,
             )
             .unwrap(),
