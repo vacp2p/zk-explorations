@@ -570,7 +570,7 @@ version = "0.1.0"
 dependencies = [
  "halo2_gadgets",
  "halo2_proofs 0.2.0 (git+https://github.com/privacy-scaling-explorations/halo2?branch=main)",
- "halo2curves 0.3.2",
+ "itertools",
  "rand",
  "snark-verifier",
 ]

@@ -7,12 +7,6 @@ use halo2_proofs::{
     },
     poly::{
         commitment::ParamsProver,
-        //Next we replace ipa with kzg!
-        /*ipa::{
-            commitment::{IPACommitmentScheme, ParamsIPA},
-            multiopen::ProverIPA,
-            strategy::SingleStrategy,
-        },*/
         kzg::{
             commitment::{KZGCommitmentScheme, ParamsKZG},
             multiopen::{ProverGWC, VerifierGWC},
