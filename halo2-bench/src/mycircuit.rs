@@ -40,7 +40,7 @@ use std::convert::TryInto;
 use std::marker::PhantomData;
 
 //From: https://github.com/zcash/halo2/blob/main/halo2_gadgets/benches/poseidon.rs
-use criterion::{criterion_group, criterion_main, Criterion};
+//use criterion::{criterion_group, criterion_main, Criterion};
 use rand::rngs::OsRng;
 
 #[derive(Clone, Copy)]

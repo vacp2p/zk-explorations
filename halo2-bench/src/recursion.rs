@@ -39,7 +39,7 @@ use snark_verifier::system::halo2::transcript::evm::EvmTranscript;
 use std::convert::TryInto;
 use std::marker::PhantomData;
 
-use criterion::{criterion_group, criterion_main, Criterion};
+//use criterion::{criterion_group, criterion_main, Criterion};
 use rand::rngs::OsRng;
 
 use crate::mycircuit::HashCircuit;
