@@ -570,7 +570,7 @@ version = "0.1.0"
 dependencies = [
  "halo2_gadgets",
  "halo2_proofs 0.2.0 (git+https://github.com/privacy-scaling-explorations/halo2?branch=main)",
- "halo2curves 0.4.0",
+ "halo2curves 0.3.2",
  "rand",
  "snark-verifier",
 ]
@@ -654,26 +654,6 @@ dependencies = [
  "lazy_static",
  "num-bigint",
  "num-traits",
- "pasta_curves",
- "paste",
- "rand",
- "rand_core",
- "static_assertions",
- "subtle",
-]
-
-[[package]]
-name = "halo2curves"
-version = "0.4.0"
-source = "git+https://github.com/privacy-scaling-explorations/halo2curves?branch=main#6e2ff3853c8fe91300650a733100640dacf313e6"
-dependencies = [
- "blake2b_simd",
- "ff",
- "group",
- "lazy_static",
- "num-bigint",
- "num-traits",
- "pairing",
  "pasta_curves",
  "paste",
  "rand",
@@ -969,15 +949,6 @@ name = "opaque-debug"
 version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "624a8340c38c1b80fd549087862da4ba43e08858af025b236e509b6649fc13d5"
-
-[[package]]
-name = "pairing"
-version = "0.23.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "81fec4625e73cf41ef4bb6846cafa6d44736525f442ba45e407c4a000a13996f"
-dependencies = [
- "group",
-]
 
 [[package]]
 name = "parity-scale-codec"

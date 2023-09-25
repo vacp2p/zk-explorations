@@ -4,7 +4,9 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-halo2curves = {git = "https://github.com/privacy-scaling-explorations/halo2curves", branch = "main"}
+halo2curves = { git = "https://github.com/privacy-scaling-explorations/halo2curves", tag = "0.3.2", package = "halo2curves" }
+
+
 snark-verifier = {git = "https://github.com/privacy-scaling-explorations/snark-verifier", branch = "main"}
 #anyhow = "1.0.71"
 halo2_gadgets = { git = "https://github.com/privacy-scaling-explorations/halo2", branch = "main" }
