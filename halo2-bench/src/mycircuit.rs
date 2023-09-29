@@ -29,6 +29,7 @@ where
     pub(crate) _spec: PhantomData<S>,
 }
 
+
 #[derive(Debug, Clone)]
 pub(crate) struct MyConfig<const WIDTH: usize, const RATE: usize, const L: usize> {
     input: [Column<Advice>; L],
@@ -42,6 +43,7 @@ where
     S: Spec<Fr, WIDTH, RATE> + Copy + Clone,
 {
     type Config = MyConfig<WIDTH, RATE, L>;
+    //TODO: when is configure() ran???
     type FloorPlanner = SimpleFloorPlanner;
     #[cfg(feature = "circuit-params")]
     type Params = ();
@@ -67,6 +69,7 @@ where
         Self::Config {
             input: state[..RATE].try_into().unwrap(),
             expected,
+            //Configure is ran here!
             poseidon_config: Pow5Chip::configure::<S>(
                 meta,
                 state.try_into().unwrap(),
@@ -111,6 +114,7 @@ where
         layouter.constrain_instance(output.cell(), config.expected, 0)
     }
 }
+
 
 #[derive(Debug, Clone, Copy)]
 pub(crate) struct MySpec<const WIDTH: usize, const RATE: usize>;

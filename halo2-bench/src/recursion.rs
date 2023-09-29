@@ -14,12 +14,11 @@ use halo2_proofs::{
         Blake2bRead, Blake2bWrite, Challenge255, TranscriptReadBuffer,
         TranscriptWriterBuffer,
     },
+    halo2curves::{
+    bn256::{Bn256, Fr, G1Affine},
+    ff::Field,}
 };
 
-use halo2_proofs::halo2curves::{
-    bn256::{Bn256, Fr, G1Affine},
-    ff::Field,
-};
 use halo2_gadgets::poseidon::{
     primitives::{self as poseidon, ConstantLength, Spec},
 };
@@ -29,11 +28,8 @@ use snark_verifier::{
     GWC, SHPLONK,
 };
 
-//use snark_verifier::system::halo2::transcript::evm::EvmTranscript;
 use std::convert::TryInto;
 use std::marker::PhantomData;
-
-//use criterion::{criterion_group, criterion_main, Criterion};
 use rand::rngs::OsRng;
 
 use crate::mycircuit::HashCircuit;
@@ -44,6 +40,7 @@ pub(crate) fn recursion<S, const WIDTH: usize, const RATE: usize, const L: usize
 where
     S: Spec<Fr, WIDTH, RATE> + Copy + Clone,
 {
+    //TODO: can this be coded to not be necessary?
     assert!(d > 1, "d must be larger than 1");
     let d = d - 1;
 
