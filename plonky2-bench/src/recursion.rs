@@ -13,6 +13,14 @@ use plonky2::recursion::dummy_circuit::cyclic_base_proof;
 
 use crate::common::common_data;
 
+/// The variable ’d’ specifies the depth of recursion.
+/// `D` denotes the degree of the extension
+/// `C` denotes the configuration
+/// 
+/// Error
+/// 
+/// As recursion depth of 0 is makes no sence, we error out
+/// with a message "recursion count has to be at least 1"
 pub fn recursion(d: usize) -> Result<()> {
     const D: usize = 2;
     type C = PoseidonGoldilocksConfig;
@@ -72,6 +80,7 @@ pub fn recursion(d: usize) -> Result<()> {
 
     let cyclic_circuit_data = builder.build::<C>();
 
+    // initial witness
     let mut pw = PartialWitness::new();
     let initial_hash = [F::ZERO, F::ONE, F::TWO, F::from_canonical_usize(3)];
     let initial_hash_pis = initial_hash.into_iter().enumerate().collect();
@@ -87,6 +96,7 @@ pub fn recursion(d: usize) -> Result<()> {
     pw.set_verifier_data_target(&verifier_data_target, &cyclic_circuit_data.verifier_only);
     let mut proof = cyclic_circuit_data.prove(pw)?;
 
+    // wire up consecutive inputs and outputs
     for _ in 0..d {
         let mut pw = PartialWitness::new();
         pw.set_bool_target(condition, true);
@@ -108,13 +118,21 @@ pub fn recursion(d: usize) -> Result<()> {
         initial_hash.try_into().unwrap(),
         counter.to_canonical_u64() as usize,
     );
+
+    // make sure the end result makes sense
     if hash != expected_hash {
         return Err(anyhow::Error::msg("hash was not calculated right"));
     }
 
+    // verify proof
     cyclic_circuit_data.verify(proof)
 }
 
+/// Hash `n` times `initial_state`.
+/// 
+/// F denotes a field that implements `RichField` trait
+/// we are hashing 4 values, so `initial_state` is an array of length 4
+/// `n` is the number of hashings we need to perform
 fn iterate_poseidon<F: RichField>(initial_state: [F; 4], n: usize) -> [F; 4] {
     let mut current = initial_state;
     for _ in 0..n {
