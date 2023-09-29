@@ -5,20 +5,15 @@ edition = "2021"
 
 [dependencies]
 itertools = "0.10.3"
-#new
-#halo2_proofs = { git = "https://github.com/privacy-scaling-explorations/halo2", tag = "v2023_04_20" }
+rand = "0.8"
 
-#this one has issues! because of the implementations
-#halo2curves = { git = "https://github.com/privacy-scaling-explorations/halo2curves", tag = "0.3.2", package = "halo2curves" }
-snark-verifier = {git = "https://github.com/privacy-scaling-explorations/snark-verifier", branch = "main"}
-#halo2_wrong_ecc = { git = "https://github.com/privacy-scaling-explorations/halo2wrong", tag = "v2023_04_20", package = "ecc", optional = true }
+halo2_proofs = { git = "https://github.com/privacy-scaling-explorations/halo2", tag = "v2023_04_20" } # not optional for now
+halo2curves = { git = 'https://github.com/privacy-scaling-explorations/halo2curves', tag = "0.3.2" }  # must be same version as in halo2_proofs
+
+snark-verifier = {git = "https://github.com/privacy-scaling-explorations/snark-verifier", package = "snark-verifier-sdk"}
 
 #Eventually use to match with other benchmarks
 #anyhow = "1.0.71"
 
-halo2_gadgets = { git = "https://github.com/privacy-scaling-explorations/halo2", branch = "main" }
+halo2_gadgets = { git = "https://github.com/privacy-scaling-explorations/halo2", tag = "v2023_04_20"  }
 
-#(original)
-halo2_proofs = { git = "https://github.com/privacy-scaling-explorations/halo2", branch = "main" }
-
-rand = "0.8"
