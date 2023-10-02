@@ -9,8 +9,11 @@ rand = "0.8"
 
 halo2_proofs = { git = "https://github.com/privacy-scaling-explorations/halo2", tag = "v2023_04_20" } # not optional for now
 halo2curves = { git = 'https://github.com/privacy-scaling-explorations/halo2curves', tag = "0.3.2" }  # must be same version as in halo2_proofs
+halo2_wrong_ecc = { git = "https://github.com/privacy-scaling-explorations/halo2wrong", tag = "v2023_04_20", package = "ecc", optional = true }
 
-snark-verifier = {git = "https://github.com/privacy-scaling-explorations/snark-verifier", package = "snark-verifier-sdk"}
+
+snark-verifier = {git = "https://github.com/privacy-scaling-explorations/snark-verifier", package = "snark-verifier"}
+snark-verifier-sdk = {git = "https://github.com/privacy-scaling-explorations/snark-verifier", package = "snark-verifier-sdk"}
 
 #Eventually use to match with other benchmarks
 #anyhow = "1.0.71"
