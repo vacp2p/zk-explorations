@@ -349,6 +349,71 @@ impl<F: RichField + Extendable<D>, const D: usize> Stark<F, D> for PoseidonStark
     fn constraint_degree(&self) -> usize {
         7
     }
+
+    fn eval_ext_circuit(
+        &self,
+        builder: &mut CircuitBuilder<F, D>,
+        vars: StarkEvaluationTargets<D, { Self::COLUMNS }, { Self::PUBLIC_INPUTS }>,
+        yield_constr: &mut RecursiveConstraintConsumer<F, D>,
+    ) {
+        let lv = vars.local_values;
+        let mut state = lv[0..STATE_SIZE].try_into().unwrap();
+
+        let (m_i, v, w_hat) = PoseidonParams::equivalent_matrices(&MDS8, STATE_SIZE, ROUNDS_P);
+
+        // first full rounds
+        for r in 0..ROUNDS_F {
+            state = add_rc_constraints_recursive(builder, &state, r, false);
+            #[allow(clippy::needless_range_loop)]
+            for i in 0..STATE_SIZE {
+                state[i] = sbox_p_constraints_recursive(builder, &state[i]);
+            }
+            state = matmul_constraints_recursive(builder, &state, None);
+            for i in 0..STATE_SIZE {
+                let constraint = builder.sub_extension(state[i], lv[COL_1ST_FULLROUND_STATE_START + r * STATE_SIZE + i]);
+                yield_constr.constraint(builder, constraint);
+                state[i] = lv[COL_1ST_FULLROUND_STATE_START + r * STATE_SIZE + i];
+            }
+        }
+
+        let opt_round_constants = PoseidonParams::equivalent_round_constants(&RC8, &MDS8, ROUNDS_F / 2, ROUNDS_P);
+
+        let p_end = ROUNDS_F + ROUNDS_P;
+
+        // partial rounds
+        for i in 0..ROUNDS_P {
+            let r = ROUNDS_F + i;
+            state = add_rc_constraints_recursive(builder, &state, r, false);
+            state[0] = sbox_p_constraints_recursive(builder, &state[0]);
+            state = matmul_constraints_recursive(builder, &state, None);
+            let constraint = builder.sub_extension(state[0], lv[COL_PARTIAL_ROUND_STATE_START + i]);
+            yield_constr.constraint(builder, constraint);
+            state[0] = lv[COL_PARTIAL_ROUND_STATE_START + i];
+        }
+
+        // the state before last full rounds
+        for i in 0..STATE_SIZE {
+            let constraint = builder.sub_extension(state[i], lv[COL_PARTIAL_ROUND_END_STATE_START + i]);
+            yield_constr.constraint(builder, constraint);
+            state[i] = lv[COL_PARTIAL_ROUND_END_STATE_START + i];
+        }
+
+        // last full rounds
+        for i in 0..ROUNDS_F {
+            let r = ROUNDS_F + ROUNDS_P + i;
+            state = add_rc_constraints_recursive(builder, &state, r, false);
+            #[allow(clippy::needless_range_loop)]
+            for j in 0..STATE_SIZE {
+                state[j] = sbox_p_constraints_recursive(builder, &state[j]);
+            }
+            state = matmul_constraints_recursive(builder, &state, None);
+            for j in 0..STATE_SIZE {
+                let constraint = builder.sub_extension(state[j], lv[COL_2ND_FULLROUND_STATE_START + i * STATE_SIZE + j]);
+                yield_constr.constraint(builder, constraint);
+                state[j] = lv[COL_2ND_FULLROUND_STATE_START + i * STATE_SIZE + j];
+            }
+        }
+    }
 }
 
 pub fn trace_to_poly_values<F: Field, const COLUMNS: usize>(
