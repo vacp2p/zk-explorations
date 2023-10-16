@@ -103,7 +103,7 @@ fn recursive_hashing(depth: usize) {
 
     use ark_bn254::Fr;
     use ark_ff::{BigInteger, One, PrimeField, Zero};
-
+    
     let mut pre_step_in = vec![Fr::zero(), Fr::one(), Fr::from(2), Fr::from(3)];
 
     let pre_res: Vec<Vec<u64>> = pre_step_in
