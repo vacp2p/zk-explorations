@@ -63,12 +63,6 @@ pub type Svk = KzgSuccinctVerifyingKey<G1Affine>;
 ///
 /// # Assumptions
 /// * `snarks` is not empty
-///
-pub fn pointless()
-{
-    println!("BAH");
-}
-
 /// `AS` should be the [`AccumulationScheme`] and [`PolynomialCommitmentScheme`] used to create `snarks`.
 /// Many things will fail if `AS` does not match how `snarks` were actually created.
 ///

@@ -1,6 +1,7 @@
-pub mod aggregation;
+//pub mod aggregation;
 pub mod mycircuit;
 pub mod recursion;
+pub mod simple_example;
 
 use mycircuit::MySpec;
 
@@ -15,5 +16,6 @@ fn main() {
     //Note: halo2_gadget is PSE's (the same(?) as zcash)
     assert_eq!(RATE, WIDTH - 1);
 
-    recursion::recursion::<MySpec<WIDTH, RATE>, WIDTH, RATE, L>(d);
+    simple_example::simple_example();
+   // recursion::recursion::<MySpec<WIDTH, RATE>, WIDTH, RATE, L>(d);
 }
