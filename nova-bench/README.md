@@ -8,9 +8,9 @@ One time:
 
 - Ensure Circom is setup correctly with Pasta curves (see Nova Scotia README)
 - Ensure submodules updates
-- Run `npm install` from circom folder
-- Run `./examples/sha256/circom/compile_vesta.sh`
+- Run `npm install` from internal circom folder
+- Run `./examples/poseidon/circom/compile_vesta.sh`
 
 Then:
 
-`cargo run --example sha256_wasm --release <depth>` where depth is number of recursive hashes to do.git
+`cargo run --example poseidon`
