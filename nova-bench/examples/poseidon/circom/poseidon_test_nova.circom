@@ -19,7 +19,6 @@
 
 pragma circom 2.0.3;
 
-include "poseidon_bytes.circom";
 include "node_modules/circomlib/circuits/poseidon.circom";
 
 template RecursivePoseidonTest(N, depth) {

@@ -2,26 +2,17 @@ use ark_std::{end_timer, start_timer};
 
 use std::{collections::HashMap, env, env::current_dir, time::Instant};
 
-use ff::derive::bitvec::vec;
-use ff::PrimeField;
 use nova_scotia::{
-    circom::{circuit::CircomCircuit, reader::load_r1cs},
-    create_public_params, create_public_params_par, create_recursive_circuit, FileLocation, F1, F2,
-    G1, G2, S1, S2,
+    circom::{reader::load_r1cs},
+    create_public_params, create_recursive_circuit, FileLocation, F1,
+    G2, S1, S2,
 };
 // Ignore create_recursive_circuit
 
 use nova_snark::{
-    parallel_prover::{FoldInput, NovaTreeNode, PublicParams},
-    traits::{circuit::TrivialTestCircuit, Group},
+    traits::Group,
     CompressedSNARK,
 };
-use num_bigint::BigInt;
-use num_traits::Num;
-use serde::{Deserialize, Serialize};
-use serde_json::json;
-
-use sha2::{Digest, Sha256};
 
 extern crate wee_alloc;
 
@@ -44,15 +35,6 @@ fn gen_nth_poseidon_hash(n: usize) -> Vec<u64> {
     let mut input1 = Fr::one();
     let mut input2 = Fr::from(2);
     let mut input3 = Fr::from(3);
-
-    // let hash = poseidon.hash_vec(&[input0, input1, input2, input3], 4).unwrap();
-
-    // let binding = hash[0].into_bigint();
-    // let array: Result<[u64; 4], _> = binding.as_ref().try_into();
-    // let a: [u64; 4]  = array.unwrap();
-
-    // println!("hash is {:?}", hash);
-    // println!("a is {:?}", a);
 
     let mut hash = vec![];
     for _ in 0..n {
@@ -79,7 +61,6 @@ fn gen_nth_poseidon_hash(n: usize) -> Vec<u64> {
 
     let res: Vec<u64> = pre_res.into_iter().flatten().collect();
 
-    // println!("res is {:?}", res);
     res
 }
 
@@ -99,8 +80,6 @@ fn recursive_hashing(depth: usize) {
         in_vector.push(gen_nth_poseidon_hash(i));
     }
 
-    // println!("100th recursive SHA256 hash: {:?}", gen_nth_sha256_hash(100));
-
     use ark_bn254::Fr;
     use ark_ff::{BigInteger, One, PrimeField, Zero};
     
@@ -118,15 +97,11 @@ fn recursive_hashing(depth: usize) {
 
     let res: Vec<u64> = pre_res.into_iter().flatten().collect();
 
-    println!("len res is {:?}", res.len());
-
     let step_in_vector = vec![0, 1, 2, 3];
 
     let mut private_inputs = Vec::new();
     for i in 0..iteration_count {
         let mut private_input = HashMap::new();
-        // println!("len in_vector[i] is {:?}", in_vector[i].len());
-        // private_input.insert("in".to_string(), json!(in_vector[i]));
         private_inputs.push(private_input);
     }
 
@@ -211,7 +186,7 @@ fn main() {
     let args: Vec<String> = env::args().collect();
     // let k: usize = args[1].parse().unwrap();
     let k = 10;
-    //let sha_block: u64 = args[2].parse().unwrap();
+    //let poseidon_block: u64 = args[2].parse().unwrap();
 
     // NOTE: Toggle here
     recursive_hashing(k);

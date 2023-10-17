@@ -1,4 +1,4 @@
-# SHA256
+# Poseidon
 
 ## Goal
 
