@@ -3,16 +3,12 @@ use ark_std::{end_timer, start_timer};
 use std::{collections::HashMap, env, env::current_dir, time::Instant};
 
 use nova_scotia::{
-    circom::{reader::load_r1cs},
-    create_public_params, create_recursive_circuit, FileLocation, F1,
+    circom::reader::load_r1cs, create_public_params, create_recursive_circuit, FileLocation, F1,
     G2, S1, S2,
 };
 // Ignore create_recursive_circuit
 
-use nova_snark::{
-    traits::Group,
-    CompressedSNARK,
-};
+use nova_snark::{traits::Group, CompressedSNARK};
 
 extern crate wee_alloc;
 
@@ -23,46 +19,6 @@ extern crate wee_alloc;
 // Use `wee_alloc` as the global allocator.
 #[global_allocator]
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
-
-// TODO: Add naive Keccak circuit (check one step vs vanilla Circom)
-
-fn gen_nth_poseidon_hash(n: usize) -> Vec<u64> {
-    use ark_bn254::Fr;
-    use ark_ff::{BigInteger, One, PrimeField, Zero};
-    use light_poseidon::{parameters::bn254_x5, Poseidon, PoseidonHasher};
-
-    let mut input0 = Fr::zero();
-    let mut input1 = Fr::one();
-    let mut input2 = Fr::from(2);
-    let mut input3 = Fr::from(3);
-
-    let mut hash = vec![];
-    for _ in 0..n {
-        let mut poseidon = Poseidon::<Fr>::new_circom(4).unwrap();
-
-        hash = poseidon
-            .hash_vec(&[input0, input1, input2, input3], 4)
-            .unwrap();
-        input0 = hash[0];
-        input1 = hash[1];
-        input2 = hash[2];
-        input3 = hash[3];
-    }
-
-    let pre_res: Vec<Vec<u64>> = hash
-        .iter_mut()
-        .map(|item| {
-            let binding = item.into_bigint();
-            let array: Result<[u64; 4], _> = binding.as_ref().try_into();
-            let a: [u64; 4] = array.unwrap();
-            a.to_vec()
-        })
-        .collect();
-
-    let res: Vec<u64> = pre_res.into_iter().flatten().collect();
-
-    res
-}
 
 fn recursive_hashing(depth: usize) {
     println! {"Using recursive depth: {:?} times depth_per_fold in circuit (default 10 or 100, check yourself! :D)", depth};
@@ -75,33 +31,11 @@ fn recursive_hashing(depth: usize) {
     let witness_generator_wasm =
         root.join("./examples/poseidon/circom/poseidon_test_nova_js/poseidon_test_nova.wasm");
 
-    let mut in_vector = vec![];
-    for i in 0..depth {
-        in_vector.push(gen_nth_poseidon_hash(i));
-    }
-
-    use ark_bn254::Fr;
-    use ark_ff::{BigInteger, One, PrimeField, Zero};
-    
-    let mut pre_step_in = vec![Fr::zero(), Fr::one(), Fr::from(2), Fr::from(3)];
-
-    let pre_res: Vec<Vec<u64>> = pre_step_in
-        .iter_mut()
-        .map(|item| {
-            let binding = item.into_bigint();
-            let array: Result<[u64; 4], _> = binding.as_ref().try_into();
-            let a: [u64; 4] = array.unwrap();
-            a.to_vec()
-        })
-        .collect();
-
-    let res: Vec<u64> = pre_res.into_iter().flatten().collect();
-
     let step_in_vector = vec![0, 1, 2, 3];
 
     let mut private_inputs = Vec::new();
-    for i in 0..iteration_count {
-        let mut private_input = HashMap::new();
+    for _ in 0..iteration_count {
+        let private_input = HashMap::new();
         private_inputs.push(private_input);
     }
 
@@ -148,7 +82,6 @@ fn recursive_hashing(depth: usize) {
     // verify the recursive SNARK
     println!("Verifying a RecursiveSNARK...");
     let timer_verify_snark = start_timer!(|| "verify SNARK");
-    let start = Instant::now();
     let res = recursive_snark.verify(
         &pp,
         iteration_count,
@@ -162,7 +95,6 @@ fn recursive_hashing(depth: usize) {
     // produce a compressed SNARK
     let timer_gen_compressed_snark =
         start_timer!(|| "Generate a CompressedSNARK using Spartan with IPA-PC");
-    let start = Instant::now();
     let (pk, vk) = CompressedSNARK::<_, _, _, _, S1, S2>::setup(&pp).unwrap();
     let res = CompressedSNARK::<_, _, _, _, S1, S2>::prove(&pp, &pk, &recursive_snark);
     assert!(res.is_ok());
@@ -170,7 +102,6 @@ fn recursive_hashing(depth: usize) {
     end_timer!(timer_gen_compressed_snark);
 
     let timer_verify_compressed_snark = start_timer!(|| "Verify CompressedSNARK");
-    let start = Instant::now();
     let res = compressed_snark.verify(
         &vk,
         iteration_count,
