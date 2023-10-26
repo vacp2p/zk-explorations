@@ -1,0 +1,11 @@
+*_cpp
+*_js
+*.r1cs
+*.sym
+*.ptau
+*.zkey
+*.wtns
+
+verification_key.json
+proof.json
+public.json
