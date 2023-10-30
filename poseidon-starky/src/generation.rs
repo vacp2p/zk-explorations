@@ -122,7 +122,7 @@ fn generate_outputs<Field: RichField>(preimage: &[Field; STATE_SIZE]) -> [Field;
     outputs
 }
 
-/// Function to generate the Poseidon2 trace
+/// Function to generate the Poseidon trace
 pub fn generate_poseidon_trace<F: RichField>(step_rows: &Vec<Row<F>>) -> [Vec<F>; NUM_COLS] {
     let trace_len = step_rows.len();
     let mut trace: Vec<Vec<F>> = vec![vec![F::ZERO; trace_len]; NUM_COLS];

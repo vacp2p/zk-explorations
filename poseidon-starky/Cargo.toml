@@ -3,12 +3,12 @@ name = "poseidon-starky"
 version = "0.1.0"
 
 categories = ["cryptography"]
-description = "Implementation of the Poseidon2 hash function"
+description = "Implementation of the Poseidon hash function"
 edition = "2021"
 keywords = ["crypto", "zero-knowledge"]
 license = "Apache-2.0"
 readme = "README.md"
-repository = "https://github.com/0xmozak/hashes"
+repository = "https://github.com/vacp2p/zk-explorations"
 
 [dependencies]
 anyhow = "1.0.71"
