@@ -26,7 +26,7 @@ mod test {
 
     #[test]
     fn test_nova_proof_100() {
-        test_nova_proof_aux(10);
+        test_nova_proof_aux(100);
     }
 
     fn test_nova_proof_aux(num_steps: usize) {
