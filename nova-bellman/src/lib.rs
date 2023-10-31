@@ -8,11 +8,11 @@ pub const TEST_SEED: [u8; 16] = [42; 16];
 
 use std::{fmt::Debug, marker::PhantomData};
 
-use bellpepper::gadgets::{boolean::Boolean, multipack::pack_bits, num::AllocatedNum};
+use bellpepper::gadgets::num::AllocatedNum;
 
 use bellpepper_core::{ConstraintSystem, SynthesisError};
 
-use neptune::{circuit::{poseidon_hash_circuit, poseidon_hash_multiple}, poseidon::PoseidonConstants, Arity};
+use neptune::{circuit::poseidon_hash_multiple, poseidon::PoseidonConstants, Arity};
 use nova::traits::{
     circuit::{StepCircuit, TrivialTestCircuit},
     Group,
@@ -24,15 +24,13 @@ where
     G: Debug + Group,
     A: Arity<G::Scalar>,
 {
-    index: u64,
     _a: PhantomData<A>,
     _g: PhantomData<G>,
 }
 
 impl<G: Group, A: Arity<G::Scalar>> PoseidonHashChainCircuit<G, A> {
-    fn new(index: u64) -> Self {
+    fn new() -> Self {
         PoseidonHashChainCircuit {
-            index,
             _a: PhantomData::<A>,
             _g: PhantomData::<G>,
         }
@@ -50,7 +48,7 @@ where
 
     fn synthesize<CS>(
         &self,
-        mut cs: &mut CS,
+        cs: &mut CS,
         z: &[AllocatedNum<G::Scalar>],
     ) -> Result<Vec<AllocatedNum<G::Scalar>>, SynthesisError>
     where
@@ -86,7 +84,6 @@ impl<G: Group, A: Arity<G::Scalar>> PoseidonHashChainCircuit<G, A> {
 
     pub fn circuit_primary() -> PoseidonHashChainCircuit<G, A> {
         PoseidonHashChainCircuit {
-            index: 1,
             _a: PhantomData::<A>,
             _g: PhantomData::<G>,
         }
@@ -106,8 +103,8 @@ impl<G: Group, A: Arity<G::Scalar>> PoseidonHashChainCircuit<G, A> {
 
         let circuits = {
             let circuits = (1..(num_steps + 1))
-                .map(|idx| {
-                    let rvp = Self::new(idx as u64);
+                .map(|_| {
+                    let rvp = Self::new();
                     rvp
                 })
                 .collect::<Vec<_>>();

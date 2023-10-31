@@ -1,5 +1,3 @@
-use bellpepper::gadgets::multipack::compute_multipacking;
-use ff::PrimeFieldBits;
 use neptune::{poseidon::PoseidonConstants, Poseidon, poseidon_alt::hash_correct_multiple};
 use nova::traits::Group;
 
@@ -18,27 +16,4 @@ pub fn calculate_chain_hash(mut value: Vec<<G1 as Group>::Scalar>, s: usize) -> 
     }
 
     value
-}
-
-fn bitwise_or(value: S1, index: S1) -> S1 {
-    let value_le_bits = value.to_le_bits().into_inner();
-
-    let idx_le_bits = index.to_le_bits().into_inner();
-
-    let mut result: [u64; 4] = [0; 4];
-
-    for i in 0..4 {
-        result[i] = value_le_bits[i] | idx_le_bits[i];
-    }
-
-    let pre_res = u64_to_bits_le(&result);
-
-    compute_multipacking(&pre_res)[0]
-}
-
-fn u64_to_bits_le(bytes: &[u64]) -> Vec<bool> {
-    bytes
-        .iter()
-        .flat_map(|&v| (0..64).map(move |i| (v >> i) & 1 == 1))
-        .collect()
 }
