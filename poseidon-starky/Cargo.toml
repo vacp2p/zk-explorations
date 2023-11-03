@@ -1,0 +1,29 @@
+[package]
+name = "poseidon-starky"
+version = "0.1.0"
+
+categories = ["cryptography"]
+description = "Implementation of the Poseidon hash function"
+edition = "2021"
+keywords = ["crypto", "zero-knowledge"]
+license = "Apache-2.0"
+readme = "README.md"
+repository = "https://github.com/vacp2p/zk-explorations"
+
+[dependencies]
+anyhow = "1.0.71"
+ark-ff = { version = "^0.4.2", default-features = false }
+lazy_static = "1.4"
+num = { version = "0.4", default-features = false, features = ["rand"] }
+plonky2 = "0.1.3"
+proptest = "1.2.0"
+starky = "0.1.1"
+zkhash_poseidon = { git = "https://github.com/tyshko-rostyslav/poseidon2", package = "zkhash", branch = "make-public"}
+env_logger = "*"
+
+[dev-dependencies]
+criterion = { version = "0.4.0", default-features = false }
+
+[[bench]]
+name = "poseidon_starky"
+harness = false
