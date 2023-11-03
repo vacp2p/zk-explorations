@@ -1,0 +1,23 @@
+[package]
+name = "nova-bellman"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+bellperson = { version = "=0.25", default-features = false }
+ff = "=0.13.0"
+generic-array = "=0.14.7"
+neptune = { default-features = false, git = "https://github.com/tyshko-rostyslav/neptune.git", branch = "multiple-return-values"}
+nova = { package = "nova-snark", version = "=0.23", default-features = false, git = "https://github.com/microsoft/Nova.git"}
+pasta_curves = { version = "=0.5.1", features = ["repr-c", "serde"]}
+pasta-msm = "=0.1.4"
+rand = "=0.8.5"
+subtle = "=2.5.0"
+bellpepper-core = "*"
+bellpepper = "*"
+rand_xorshift = "0.3.0"
+
+[dev-dependencies]
+criterion = "0.3"
