@@ -1,14 +1,11 @@
 use ark_std::{end_timer, start_timer};
-use ff::Field;
 use halo2_curves::bn256::Fr;
 use halo2_proofs::circuit::Value;
 use halo2_proofs::halo2curves as halo2_curves;
 use halo2_proofs::plonk::Circuit;
 use halo2_proofs::{halo2curves::bn256::Bn256, poly::kzg::commitment::ParamsKZG};
-use pasta_curves::{pallas};
 use rand::RngCore;
 use rand::rngs::OsRng;
-use snark_verifier_sdk::evm::{evm_verify, gen_evm_proof_shplonk, gen_evm_verifier_shplonk};
 use snark_verifier_sdk::halo2::gen_srs;
 use snark_verifier_sdk::{
     gen_pk,
@@ -30,36 +27,12 @@ pub mod application {
     use rand::RngCore;
     use snark_verifier_sdk::CircuitExt;
 
-
-    use halo2_proofs::{
-        
-        plonk::{
-            create_proof, keygen_pk, keygen_vk, verify_proof,
-        },
-        poly::{
-            commitment::ParamsProver,
-            ipa::{
-                commitment::{IPACommitmentScheme, ParamsIPA},
-                multiopen::ProverIPA,
-                strategy::SingleStrategy,
-            },
-            VerificationStrategy,
-        },
-        transcript::{
-            Blake2bRead, Blake2bWrite, Challenge255, TranscriptReadBuffer, TranscriptWriterBuffer,
-        },
-    };
-    use halo2curves::pasta::{pallas, vesta, EqAffine};
-
     use halo2_gadgets::poseidon::{
-        primitives::{self as poseidon, generate_constants, ConstantLength, Mds, Spec},
+        primitives::{generate_constants, ConstantLength, Mds, Spec},
         Hash, Pow5Chip, Pow5Config,
     };
     use std::convert::TryInto;
     use std::marker::PhantomData;
-
-    use criterion::{criterion_group, criterion_main, Criterion};
-    use rand::rngs::OsRng;
 
     #[derive(Clone, Copy)]
     pub struct HashCircuit<S, const WIDTH: usize, const RATE: usize, const L: usize>
@@ -100,8 +73,7 @@ pub mod application {
 
         fn configure(meta: &mut ConstraintSystem<Fr>) -> Self::Config {
             let state = (0..WIDTH).map(|_| meta.advice_column()).collect::<Vec<_>>();
-            let expected = meta.instance_column();
-            // meta.enable_equality(expected);
+            let _ = meta.instance_column();
             let partial_sbox = meta.advice_column();
 
             let rc_a = (0..WIDTH).map(|_| meta.fixed_column()).collect::<Vec<_>>();
@@ -151,10 +123,7 @@ pub mod application {
                 chip,
                 layouter.namespace(|| "init"),
             )?;
-            let output = hasher.hash(layouter.namespace(|| "hash"), message)?;
-
-            // layouter.constrain_instance(output.cell(), config.expected, 0)
-
+            let _ = hasher.hash(layouter.namespace(|| "hash"), message)?;
 
             Ok(())
         }
@@ -184,8 +153,6 @@ pub mod application {
             generate_constants::<_, Self, WIDTH, RATE>()
         }
     }
-
-    const K: u32 = 7;
 
     #[derive(Clone, Copy)]
     pub struct StandardPlonkConfig {
@@ -325,13 +292,6 @@ pub mod application {
     }
 }
 
-fn gen_application_snark_old(params: &ParamsKZG<Bn256>) -> Snark {
-    let circuit = application::StandardPlonk::rand(OsRng);
-
-    let pk = gen_pk(params, &circuit, Some(Path::new("./examples/app.pk")));
-    gen_snark_shplonk(params, &pk, circuit, None::<&str>)
-}
-
 fn gen_application_snark(params: &ParamsKZG<Bn256>) -> Snark {
     let mut rng = OsRng;
 
@@ -357,8 +317,6 @@ fn main() {
     let snarks = [(); 3].map(|_| gen_application_snark(&params_app));
 
     let params = gen_srs(23);
-    println!("after gen srs 23");
-    // let params = params_app;
     let agg_circuit = AggregationCircuit::<SHPLONK>::new(&params, snarks);
     println!("after agg_circuit");
     let start0 = start_timer!(|| "gen vk & pk");
@@ -370,18 +328,11 @@ fn main() {
     );
     end_timer!(start0);
 
-    println!("after pk");
-
-    let agg_instances = agg_circuit.instance();
-
-    let proof = snark_verifier_sdk::halo2::gen_proof_shplonk(
+    snark_verifier_sdk::halo2::gen_proof_shplonk(
         &params,
         &pk,
         agg_circuit.clone(),
         agg_circuit.instances(),
         None,
     );
-
-    println!("after proof");
-    println!("proof is {:?}", proof);
 }
