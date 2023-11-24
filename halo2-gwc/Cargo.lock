@@ -747,7 +747,6 @@ name = "halo2-gwc"
 version = "0.1.0"
 dependencies = [
  "ark-std",
- "bincode",
  "criterion",
  "criterion-macro",
  "ecc",
@@ -756,7 +755,6 @@ dependencies = [
  "halo2_gadgets",
  "halo2_proofs",
  "halo2curves",
- "hex",
  "itertools",
  "lazy_static",
  "num-bigint",
@@ -768,8 +766,6 @@ dependencies = [
  "pprof",
  "rand",
  "rand_chacha",
- "serde",
- "serde_json",
  "snark-verifier",
  "snark-verifier-sdk",
 ]
