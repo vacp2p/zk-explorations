@@ -29,21 +29,12 @@ halo2curves = { git = 'https://github.com/privacy-scaling-explorations/halo2curv
 halo2_wrong_ecc = { git = "https://github.com/privacy-scaling-explorations/halo2wrong", tag = "v2023_04_20", package = "ecc", optional = true }
 poseidon = { git = "https://github.com/privacy-scaling-explorations/poseidon", tag = "v2023_04_20", optional = true }
 
-# loader_evm
-ethereum-types = { version = "0.14", default-features = false, features = [
-    "std",
-], optional = true }
-
 ark-std = { version = "0.3.0", features = ["print-trace"] }
 paste = "1.0.7"
-pprof = { version = "0.11", features = ["criterion", "flamegraph"] }
-criterion = "0.4"
-criterion-macro = "0.4"
 
 [features]
-default = ["loader_halo2", "loader_evm", "derive_serde", "display"]
+default = ["loader_halo2", "derive_serde", "display"]
 display = []
-loader_evm = ["snark-verifier/loader_evm", "dep:ethereum-types"]
 loader_halo2 = [
     "snark-verifier/system_halo2",
     "snark-verifier/loader_halo2",
