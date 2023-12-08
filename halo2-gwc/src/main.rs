@@ -48,7 +48,6 @@ pub mod application {
     #[derive(Debug, Clone)]
     pub struct MyConfig<const WIDTH: usize, const RATE: usize, const L: usize> {
         input: [Column<Advice>; L],
-        // expected: Column<Instance>,
         poseidon_config: Pow5Config<Fr, WIDTH, RATE>,
     }
 
