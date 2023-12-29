@@ -1,3 +1,5 @@
+// Based upon https://github.com/privacy-scaling-explorations/snark-verifier/blob/main/snark-verifier/examples/evm-verifier-with-accumulator.rs
+
 use halo2_proofs::halo2curves as halo2_curves;
 
 pub mod application {
