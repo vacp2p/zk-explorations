@@ -501,22 +501,13 @@ dependencies = [
 name = "halo2-common"
 version = "0.1.0"
 dependencies = [
- "ark-std",
  "ecc",
  "ff",
  "halo2_gadgets",
  "halo2_proofs",
  "halo2curves",
- "itertools",
- "lazy_static",
- "num-bigint",
- "num-integer",
- "num-traits",
- "pasta_curves",
- "paste",
  "poseidon",
  "rand",
- "rand_chacha",
  "snark-verifier",
  "snark-verifier-sdk",
 ]
