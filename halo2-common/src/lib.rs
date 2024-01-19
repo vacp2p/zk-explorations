@@ -1,9 +1,6 @@
 // Based upon https://github.com/privacy-scaling-explorations/snark-verifier/blob/main/snark-verifier/examples/evm-verifier-with-accumulator.rs
-
-use halo2_proofs::halo2curves as halo2_curves;
-
 pub mod application {
-    use super::halo2_curves::bn256::Fr;
+    use halo2_proofs::halo2curves::bn256::Fr;
     use halo2_proofs::{
         circuit::{Layouter, SimpleFloorPlanner, Value},
         plonk::{Advice, Circuit, Column, ConstraintSystem, Error, Fixed, Instance},
@@ -68,7 +65,6 @@ pub mod application {
 
             Self::Config {
                 input: state[..RATE].try_into().unwrap(),
-                // expected,
                 poseidon_config: Pow5Chip::configure::<S>(
                     meta,
                     state.try_into().unwrap(),
