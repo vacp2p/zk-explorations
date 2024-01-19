@@ -59,7 +59,6 @@ pub mod application {
         fn configure(meta: &mut ConstraintSystem<Fr>) -> Self::Config {
             let state = (0..WIDTH).map(|_| meta.advice_column()).collect::<Vec<_>>();
             let _ = meta.instance_column();
-            // // meta.enable_equality(expected);
             let partial_sbox = meta.advice_column();
 
             let rc_a = (0..WIDTH).map(|_| meta.fixed_column()).collect::<Vec<_>>();
