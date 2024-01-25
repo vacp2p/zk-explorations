@@ -49,7 +49,6 @@ fn main() {
         &params,
         &agg_circuit.without_witnesses(),
         None,
-        // Some(Path::new("./examples/agg.pk")),
     );
     end_timer!(start0);
 
