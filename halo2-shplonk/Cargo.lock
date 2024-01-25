@@ -743,6 +743,21 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "eabb4a44450da02c90444cf74558da904edde8fb4e9035a9a6a4e15445af0bd7"
 
 [[package]]
+name = "halo2-common"
+version = "0.1.0"
+dependencies = [
+ "ecc",
+ "ff",
+ "halo2_gadgets",
+ "halo2_proofs",
+ "halo2curves",
+ "poseidon",
+ "rand",
+ "snark-verifier",
+ "snark-verifier-sdk",
+]
+
+[[package]]
 name = "halo2-shplonk"
 version = "0.1.0"
 dependencies = [
@@ -753,6 +768,7 @@ dependencies = [
  "ecc",
  "ethereum-types",
  "ff",
+ "halo2-common",
  "halo2_gadgets",
  "halo2_proofs",
  "halo2curves",
