@@ -511,12 +511,28 @@ dependencies = [
 ]
 
 [[package]]
+name = "halo2-common"
+version = "0.1.0"
+dependencies = [
+ "ecc",
+ "ff",
+ "halo2_gadgets",
+ "halo2_proofs",
+ "halo2curves",
+ "poseidon",
+ "rand",
+ "snark-verifier",
+ "snark-verifier-sdk",
+]
+
+[[package]]
 name = "halo2-gwc"
 version = "0.1.0"
 dependencies = [
  "ark-std",
  "ecc",
  "ff",
+ "halo2-common",
  "halo2_gadgets",
  "halo2_proofs",
  "halo2curves",
