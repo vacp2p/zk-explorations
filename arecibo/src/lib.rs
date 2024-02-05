@@ -2,6 +2,7 @@ pub mod calculation;
 pub mod error;
 pub mod poseidon_chain_hash_proof;
 pub mod public_params;
+pub mod tests;
 
 pub const TEST_SEED: [u8; 16] = [42; 16];
 
