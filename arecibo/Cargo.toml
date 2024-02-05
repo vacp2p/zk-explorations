@@ -1,0 +1,24 @@
+[package]
+name = "arecibo"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+arecibo = { git = "https://github.com/tyshko-rostyslav/arecibo.git", package = "nova-snark", branch = "main-updated" }
+ff = "=0.13.0"
+generic-array = "=0.14.7"
+neptune = { git = "https://github.com/tyshko-rostyslav/neptune.git", branch="dev-multiple-hash", default-features = false, features = ["abomonation"] }
+# neptune = { git = "https://github.com/lurk-lab/neptune", branch="dev", default-features = false, features = ["abomonation"] }
+# nova = { package = "nova-snark", version = "=0.23", default-features = false, git = "https://github.com/microsoft/Nova.git"}
+pasta_curves = { version = "=0.5.1", features = ["repr-c", "serde"]}
+pasta-msm = "=0.1.4"
+rand = "=0.8.5"
+subtle = "=2.5.0"
+bellpepper-core = { git="https://github.com/lurk-lab/bellpepper", branch="dev", default-features = false }
+bellpepper = { git="https://github.com/lurk-lab/bellpepper", branch="dev", default-features = false }
+rand_xorshift = "0.3.0"
+
+[lib]
+doctest = false
