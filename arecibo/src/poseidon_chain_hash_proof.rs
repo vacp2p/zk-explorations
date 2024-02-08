@@ -43,7 +43,7 @@ impl NovaChainHashProof {
                     &circuit_secondary.clone(),
                     &z0_primary.clone(),
                     &z0_secondary.clone(),
-                ).unwrap(); //todo
+                ).map_err(|err| Error::Arecibo(err))?;
                 let res = rs
                     .prove_step(
                         pp,
