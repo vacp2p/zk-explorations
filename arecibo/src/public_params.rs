@@ -16,9 +16,6 @@ pub type A2 = generic_array::typenum::U4;
 pub type S1 = pallas::Scalar;
 pub type S2 = vesta::Scalar;
 
-
-// pub type C2 = TrivialCircuit<<G2 as Group>::Scalar>;
-
 pub type E1 = PallasEngine;
 pub type E2 = VestaEngine;
 pub type C1 = PoseidonHashChainCircuit<G1, A1>;
