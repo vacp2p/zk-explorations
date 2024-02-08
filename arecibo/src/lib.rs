@@ -8,13 +8,11 @@ pub const TEST_SEED: [u8; 16] = [42; 16];
 
 use std::{fmt::Debug, marker::PhantomData};
 
-use arecibo::{
-    traits::{
-      circuit::{StepCircuit, TrivialCircuit},
-      Group,
-    },
-  };
-  use bellpepper_core::{num::AllocatedNum, ConstraintSystem, SynthesisError};
+use arecibo::traits::{
+    circuit::{StepCircuit, TrivialCircuit},
+    Group,
+};
+use bellpepper_core::{num::AllocatedNum, ConstraintSystem, SynthesisError};
 
 use neptune::{circuit::poseidon_hash_multiple, poseidon::PoseidonConstants, Arity};
 
@@ -63,13 +61,7 @@ where
 
         let constants = PoseidonConstants::<G::Scalar, A>::new();
 
-        let res = poseidon_hash_multiple(
-            cs,
-            vec![x0, x1, x2, x3],
-            &constants,
-            4,
-        )
-        .unwrap();
+        let res = poseidon_hash_multiple(cs, vec![x0, x1, x2, x3], &constants, 4).unwrap();
 
         assert_eq!(self.arity(), res.len());
 

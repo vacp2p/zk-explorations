@@ -1,9 +1,9 @@
 use arecibo::traits::{circuit::TrivialCircuit, snark::default_ck_hint, Group};
 
-use pasta_curves::{pallas, vesta};
 use arecibo::provider::PallasEngine;
 use arecibo::provider::VestaEngine;
 use arecibo::traits::Engine;
+use pasta_curves::{pallas, vesta};
 
 use crate::PoseidonHashChainCircuit;
 
@@ -31,5 +31,10 @@ pub type NovaVDFPublicParams = arecibo::PublicParams<
 pub fn public_params() -> NovaVDFPublicParams {
     let (circuit_primary, circuit_secondary) = PoseidonHashChainCircuit::<G1, A1>::circuits();
 
-    NovaVDFPublicParams::setup(&circuit_primary, &circuit_secondary.clone(), &*default_ck_hint(), &*default_ck_hint(),)
+    NovaVDFPublicParams::setup(
+        &circuit_primary,
+        &circuit_secondary.clone(),
+        &*default_ck_hint(),
+        &*default_ck_hint(),
+    )
 }

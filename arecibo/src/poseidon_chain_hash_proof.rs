@@ -1,6 +1,6 @@
 use crate::{
     error::Error,
-    public_params::{NovaVDFPublicParams, A1, C1, C2, G1, G2, S1, S2, E1, E2},
+    public_params::{NovaVDFPublicParams, A1, C1, C2, E1, E2, G1, G2, S1, S2},
     PoseidonHashChainCircuit,
 };
 
@@ -25,11 +25,7 @@ impl NovaChainHashProof {
         for circuit_primary in circuits.iter() {
             if let Some(mut rs) = recursive_snark {
                 let res = rs
-                    .prove_step(
-                        pp,
-                        &circuit_primary.clone(),
-                        &circuit_secondary.clone(),
-                    )
+                    .prove_step(pp, &circuit_primary.clone(), &circuit_secondary.clone())
                     .map_err(Error::Arecibo);
                 if res.is_err() {
                     dbg!(&res);
@@ -43,13 +39,10 @@ impl NovaChainHashProof {
                     &circuit_secondary.clone(),
                     &z0_primary.clone(),
                     &z0_secondary.clone(),
-                ).map_err(|err| Error::Arecibo(err))?;
+                )
+                .map_err(|err| Error::Arecibo(err))?;
                 let res = rs
-                    .prove_step(
-                        pp,
-                        &circuit_primary.clone(),
-                        &circuit_secondary.clone(),
-                    )
+                    .prove_step(pp, &circuit_primary.clone(), &circuit_secondary.clone())
                     .map_err(Error::Arecibo);
                 if res.is_err() {
                     dbg!(&res);

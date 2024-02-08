@@ -1,5 +1,5 @@
-use neptune::{poseidon::PoseidonConstants, Poseidon, poseidon_alt::hash_correct_multiple};
 use arecibo::traits::Group;
+use neptune::{poseidon::PoseidonConstants, poseidon_alt::hash_correct_multiple, Poseidon};
 
 use pasta_curves::Fq;
 
