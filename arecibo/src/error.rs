@@ -4,6 +4,6 @@ use arecibo::errors::NovaError;
 
 #[derive(Debug)]
 pub enum Error {
-    Nova(NovaError),
+    Arecibo(NovaError),
     Synthesis(SynthesisError),
 }

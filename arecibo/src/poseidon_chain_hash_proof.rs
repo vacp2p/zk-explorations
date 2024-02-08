@@ -30,7 +30,7 @@ impl NovaChainHashProof {
                         &circuit_primary.clone(),
                         &circuit_secondary.clone(),
                     )
-                    .map_err(Error::Nova);
+                    .map_err(Error::Arecibo);
                 if res.is_err() {
                     dbg!(&res);
                 }
@@ -50,7 +50,7 @@ impl NovaChainHashProof {
                         &circuit_primary.clone(),
                         &circuit_secondary.clone(),
                     )
-                    .map_err(Error::Nova);
+                    .map_err(Error::Arecibo);
                 if res.is_err() {
                     dbg!(&res);
                 }
