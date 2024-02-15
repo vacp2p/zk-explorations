@@ -10,5 +10,5 @@ sudo apt-get install -y gnuplot
 ## Running
 
 ```bash
-cargo run bench
+cargo bench
 ```
