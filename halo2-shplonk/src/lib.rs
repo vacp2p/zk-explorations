@@ -17,7 +17,7 @@ use std::marker::PhantomData;
 use std::path::Path;
 use halo2_common::application;
 
-fn gen_application_snark(params: &ParamsKZG<Bn256>) -> Snark {
+pub fn gen_application_snark(params: &ParamsKZG<Bn256>) -> Snark {
     let mut rng = OsRng;
 
     let message: [Fr; 8] = (0..8)
@@ -37,7 +37,7 @@ fn gen_application_snark(params: &ParamsKZG<Bn256>) -> Snark {
     gen_snark_shplonk(params, &pk, circuit, None::<&str>)
 }
 
-fn main() {
+fn main_function() {
     let params_app = gen_srs(8);
     let snarks = [(); 3].map(|_| gen_application_snark(&params_app));
 
