@@ -1,8 +1,24 @@
 [package]
-name = "plonky2-bench"
+name = "plonky2_bench"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
 plonky2 = "0.1.3"
 anyhow = "1.0.71"
+criterion = { version = "0.5", features = ["html_reports"] }
+
+[dev-dependencies]
+flate2 = "1.0"
+hex = "0.4.3"
+sha2 = "0.10.7"
+tracing-test = "0.2.4"
+expect-test = "1.4.1"
+anyhow = "1.0.72"
+tap = "1.0.1"
+tracing-texray = "0.2.0"
+tracing-subscriber = { version = "0.3.17", features = ["env-filter"] }
+
+[[bench]]
+name = "poseidon"
+harness = false
