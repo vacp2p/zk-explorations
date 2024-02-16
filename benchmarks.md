@@ -7,7 +7,7 @@ which offers fewer constraints in the circuit. This results in quicker proving t
 In fact, Poseidon is explicitly tailored for optimal SNARK performance and has gained immense popularity in nearly every project that incorporates SNARKs. 
 Thus, not only is it more efficiently optimized, but it also represents a common workload in SNARK-based systems. 
 This makes our testing more representative of real-world scenarios and less theoretical.
-We aim to meticulously evaluate Poseidon’s efficiency on zk-SNARK and zk-STARK circuit platforms like Nova, Halo2 (Halo2 + KZG), Plonky2, and Starky. 
+We aim to meticulously evaluate Poseidon’s efficiency on zk-SNARK and zk-STARK circuit platforms like Nova, Arecibo, Halo2 Plonkish,  Halo2 SHPlonk, and Plonky2.
 Through this comparison, we seek a holistic understanding of the advantages and drawbacks of each platform. 
 Armed with this insight, we hope to determine the best framework tailored to our requirements.
 
@@ -36,7 +36,7 @@ The ZKP community is always keen on benchmark data and comparisons, this is why 
 
 # The Four Proof Systems
 
-We are interested in comparing four different proof systems: Nova, Halo2, Plonky2, and Starky. In what follows, we will highlight the main differences between these systems.
+We are interested in comparing four different proof systems: Nova, Arecibo, Halo2 Plonkish,  Halo2 SHPlonk, and Plonky2. In what follows, we will highlight the main differences between these systems.
 
 * _Nova_: Nova presents a fresh methodology for incrementally verifiable computation (IVC) by introducing a folding mechanism, 
 moving away from the traditional use of succinct non-interactive arguments of knowledge (SNARKs). 
@@ -46,18 +46,35 @@ When utilizing the non-interactive variant of the folding method for relaxed R1C
 the verifier’s expenses remain consistent, leading to a verifier circuit of constant size, primarily influenced by two group scalar multiplications. 
 The work required by the prover at each juncture is majorly defined by two multiexponentiations, roughly mirroring the magnitude of the incremental computation |F|.
 
-    Nova’s methodology paves the way for executing IVC with a concise verifier circuit and streamlined prover calculations. 
+  Nova’s methodology paves the way for executing IVC with a concise verifier circuit and streamlined prover calculations. 
  It sidesteps the need for FFTs and can be effectively set up using any elliptic curve cycles where the Discrete Logarithm Problem (DLOG) poses challenges.
  Furthermore, Nova integrates a proficient zero-knowledge succinct non-interactive argument (zkSNARK) to succinctly and confidentially validate the possession of legitimate IVC proofs. 
  This ensures a brief, confidential validation of a genuine IVC demonstration.
+ 
+ * _Arecibo_: SuperNova protocol offers an efficient solution for virtual machine modelization and circuit operations, reducing costs and complexities. It innovates on Nova's folding scheme by segmenting universal circuits into smaller sub-circuits, enhancing both complexity and cost efficiency. This effort aims to standardize the Non-Uniform Incremental Verifiable Computation (NIVC) approach, improving the folding scheme implementations significantly. The integration of the SuperNova protocol into Arecibo, is a significant leap in cryptographic proofs and folding schemes. 
+ 
+ Several optimizations were implemented to enhance the efficiency of the Arecibo implementation. Specifically, the number of variables and constraints in the recursive verification circuit were significantly reduced and the accuracy of the recursive SNARK verification was improved. This allows for the verification of the folding logic without the need to generate a full compressed SNARK.
+ 
+ To avoid a malicious prover from generating a valid proof for any public input, Arecibo builds on the Bounded Witness Sumcheck which presents an effective solution in both individual and batched settings, maintaining uniformity and enhancing security. Moreover, an optimized SNARK tailored for SuperNova's folded proofs was developed. Nova currently utilizes an adapted Spartan SNARK protocol for compressing relaxed R1CS instances at the final stage. With the advancement to SuperNova,  a batched version of the Spartan protocol was introduced. This version can verify several relaxed R1CS instances simultaneously within a single SNARK proof, significantly improving the efficiency of the verification process.
+ 
+ To address the issue of the costs for both the prover and the verifier when compressing SuperNova proofs (which requires the prover to supply a distinct SNARK proof for every circuit), Arecibo implemented a solution  that consolidates multiple Spartan proofs into a single batch for combined proof and verification. This innovative method substantially reduces the complexity for the verifier, equating it to the challenge of verifying a single Spartan proof, or two in the case of cycle of curves scenarios. This batching approach not only streamlines the verification process but also significantly cuts down on the resources and time required for both parties involved.
+ 
+ 
 
-* _Halo2_: Halo2 stands as a groundbreaking zk-SNARK construction, representing a practical realization of recursive proof composition without the need for a trusted setup. 
-It’s noteworthy that Halo2 relies on the discrete log assumption over standard cycles of elliptic curves. This protocol is adept at incrementally verifying extensive computational tasks. 
-Among its innovative techniques, Halo2 introduces the utilization of a unique 2-cycle of elliptic curves, aptly named Tweedledum and Tweedledee. 
+* _Halo2 (GWC)_: Halo2 emerges as a pioneering zk-SNARK framework, enabling recursive proof composition without a trusted setup, marking a significant advancement in cryptographic protocols. It operates based on the discrete log assumption, utilizing standard cycles of elliptic curves to verify complex computational tasks incrementally. A notable innovation within Halo2 is the introduction of a unique pair of elliptic curves, Tweedledum and Tweedledee, forming a 2-cycle that plays a critical role in its operations. 
 
-     Additionally, it harnesses specific endomorphisms to minimize the verification circuit’s size. Designed with a keen focus on efficiency, 
-Halo2 ensures that both proof size and verification time remain consistent, irrespective of the recursion depth. 
-When benchmarked against other proposed protocols, Halo2 shines in terms of proof size, recursion threshold, and in reducing proving time.
+Incorporating UltraPLONK's advancements, Halo2 extends its capabilities with PLONKish circuits, which are designed with a focus on efficiency and flexibility. These circuits are organized in a matrix format, with components categorized into fixed, advice, and instance columns, supporting a variety of polynomial and lookup arguments. This structure is underpinned by a finite field \(F\), with configurations that include limits on constraint degrees and specific columns for equality constraints. 
+
+One of the keys to Halo2's efficiency is its utilization of specific endomorphisms, significantly reducing the size of the verification circuit. This ensures that both the proof size and the verification time remain manageable, regardless of the recursion levels involved. The protocol's design emphasizes minimizing resource requirements while maximizing performance, making it stand out in terms of proof size, recursion capability, and proving speed when compared to other zk-SNARK constructions. 
+
+By integrating PLONKish circuit designs, Halo2 leverages the strengths of UltraPLONK, including custom gates and enhanced lookup arguments, to support its innovative recursive proof system. This synergy between Halo2's foundational elliptic curve operations and the PLONKish circuit framework establishes a robust and efficient platform for secure, scalable, and trustless verification of computational tasks.
+
+* _Halo2 (SHPlonk)_: SHPlonk is a significant advancement over the PLONK protocol, representing a more efficient solution compared to PLONK. Its implementation in Halo2 underscores its potential to build more scalable and secure blockchains.
+
+The key differentiator of SHPlonk lies in its utilization of a multi-poly commitment scheme, wherein the prover commits to multiple polynomials instead of just one. This approach adds an extra layer of security, as the verifier would need to guess the values of all committed polynomials to successfully refute the proof, thus reducing the likelihood of cheating. 
+Furthermore, SHPlonk optimizes the polynomial commitment layer, offering advantages such as reducing the workload of the prover and enabling multiple polynomial openings. These benefits include a more effective commitment scheme compared to the KZG10 commitment, support for multi-polynomial and multi-openings, and a reduction in the number of elliptic curve operations required by the verifier. 
+
+By streamlining the verification process and reducing gas consumption, SHPlonk paves the way for the development of more efficient and scalable cryptographic protocols, making it a valuable tool for enhancing blockchain security and privacy.
 
 * _Plonky2_: Plonky2 represents a cryptographic argument system designed for rapid recursive composition. While it’s grounded in the TurboPLONK arithmetization framework, 
 it diverges by integrating the FRI (Fast Reed- Solomon Interactive Oracle Proof) into its polynomial testing approach. 
