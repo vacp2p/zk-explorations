@@ -12,8 +12,6 @@ Through this comparison, we seek a holistic understanding of the advantages and 
 Armed with this insight, we hope to determine the best framework tailored to our requirements.
 
 
-
-
 # Considerations for Benchmarks
 
 Evaluating various zero-knowledge proof systems is important, given the swift advancements in the field. 
