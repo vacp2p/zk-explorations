@@ -46,7 +46,7 @@ When utilizing the non-interactive variant of the folding method for relaxed R1C
 the verifier’s expenses remain consistent, leading to a verifier circuit of constant size, primarily influenced by two group scalar multiplications. 
 The work required by the prover at each juncture is majorly defined by two multiexponentiations, roughly mirroring the magnitude of the incremental computation |F|.
 
- Nova’s methodology paves the way for executing IVC with a concise verifier circuit and streamlined prover calculations. 
+  Nova’s methodology paves the way for executing IVC with a concise verifier circuit and streamlined prover calculations. 
  It sidesteps the need for FFTs and can be effectively set up using any elliptic curve cycles where the Discrete Logarithm Problem (DLOG) poses challenges.
  Furthermore, Nova integrates a proficient zero-knowledge succinct non-interactive argument (zkSNARK) to succinctly and confidentially validate the possession of legitimate IVC proofs. 
  This ensures a brief, confidential validation of a genuine IVC demonstration.
