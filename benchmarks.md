@@ -57,15 +57,15 @@ The work required by the prover at each juncture is majorly defined by two multi
   proofs and folding schemes. 
  
   Several optimizations were implemented to enhance the efficiency of the Arecibo implementation. Specifically, the number of variables and constraints in the recursive 
- verification circuit were significantly reduced and the accuracy of the recursive SNARK verification was improved. This allows for the verification of the folding logic 
- without the need to generate a full compressed SNARK.
+verification circuit were significantly reduced and the accuracy of the recursive SNARK verification was improved. This allows for the verification of the folding logic 
+without the need to generate a full compressed SNARK.
  
   To avoid a malicious prover from generating a valid proof for any public input, Arecibo builds on the Bounded Witness Sumcheck which presents an effective solution
- in both individual and batched settings, maintaining uniformity and enhancing security. Moreover, an optimized SNARK tailored for SuperNova's folded proofs was developed. 
- Nova currently utilizes an adapted Spartan SNARK protocol for compressing relaxed R1CS instances at the final stage. With the advancement to SuperNova,  a batched version 
- of the Spartan protocol was introduced. This version can verify several relaxed R1CS instances simultaneously within a single SNARK proof, significantly improving the efficiency of the verification process.
+in both individual and batched settings, maintaining uniformity and enhancing security. Moreover, an optimized SNARK tailored for SuperNova's folded proofs was developed. 
+Nova currently utilizes an adapted Spartan SNARK protocol for compressing relaxed R1CS instances at the final stage. With the advancement to SuperNova,  a batched version 
+of the Spartan protocol was introduced. This version can verify several relaxed R1CS instances simultaneously within a single SNARK proof, significantly improving the efficiency of the verification process.
  
-  To address the issue of the costs for both the prover and the verifier when compressing SuperNova proofs (which requires the prover to supply a distinct SNARK proof for every circuit), Arecibo implemented a solution  that consolidates multiple Spartan proofs into a single batch for combined proof and verification. This innovative method substantially reduces the complexity for the verifier, equating it to the challenge of verifying a single Spartan proof, or two in the case of cycle of curves scenarios. This batching approach not only streamlines the verification process but also significantly cuts down on the resources and time required for both parties involved.
+  To address the issue of the costs for both the prover and the verifier when compressing SuperNova proofs (which requires the prover to supply a distinct SNARK proof for every circuit), Arecibo implemented solution  that consolidates multiple Spartan proofs into a single batch for combined proof and verification. This innovative method substantially reduces the complexity for the verifier, equating it to the challenge of verifying a single Spartan proof, or two in the case of cycle of curves scenarios. This batching approach not only streamlines the verification process but also significantly cuts down on the resources and time required for both parties involved.
  
  
 
