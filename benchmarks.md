@@ -53,8 +53,8 @@ The work required by the prover at each juncture is majorly defined by two multi
  
  * _Arecibo_: SuperNova protocol offers an efficient solution for virtual machine modelization and circuit operations, reducing costs and complexities. It innovates on Nova's folding 
  scheme by segmenting universal circuits into smaller sub-circuits, enhancing both complexity and cost efficiency. This effort aims to standardize the Non-Uniform Incremental Verifiable
-  Computation (NIVC) approach, improving the folding scheme implementations significantly. The integration of the SuperNova protocol into Arecibo, is a significant leap in cryptographic 
-  proofs and folding schemes. 
+ Computation (NIVC) approach, improving the folding scheme implementations significantly. The integration of the SuperNova protocol into Arecibo, is a significant leap in cryptographic 
+ proofs and folding schemes. 
  
   Several optimizations were implemented to enhance the efficiency of the Arecibo implementation. Specifically, the number of variables and constraints in the recursive 
 verification circuit were significantly reduced and the accuracy of the recursive SNARK verification was improved. This allows for the verification of the folding logic 
