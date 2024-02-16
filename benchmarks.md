@@ -7,7 +7,7 @@ which offers fewer constraints in the circuit. This results in quicker proving t
 In fact, Poseidon is explicitly tailored for optimal SNARK performance and has gained immense popularity in nearly every project that incorporates SNARKs. 
 Thus, not only is it more efficiently optimized, but it also represents a common workload in SNARK-based systems. 
 This makes our testing more representative of real-world scenarios and less theoretical.
-We aim to meticulously evaluate Poseidon’s efficiency on zk-SNARK and zk-STARK circuit platforms like Nova, Arecibo, Halo2 Plonkish,  Halo2 SHPlonk, and Plonky2.
+We aim to meticulously evaluate Poseidon’s efficiency on zk-SNARK and zk-STARK circuit platforms like Nova, Halo2 (Halo2 + KZG), Plonky2, and Starky. 
 Through this comparison, we seek a holistic understanding of the advantages and drawbacks of each platform. 
 Armed with this insight, we hope to determine the best framework tailored to our requirements.
 
