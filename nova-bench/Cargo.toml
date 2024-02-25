@@ -27,11 +27,9 @@ wee_alloc = "0.4.5"
 light-poseidon = { version = "*", git = "https://github.com/tyshkor/light-poseidon.git", branch = "hash_vec"}
 ark-bn254 = "*"
 ark-ff = "*"
-criterion = { version = "0.5", features = ["html_reports"] }
-
 
 [dev-dependencies]
-
+criterion = { version = "0.5", features = ["html_reports"] }
 
 [[bench]]
 name = "poseidon"
