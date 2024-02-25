@@ -3,12 +3,12 @@ use ark_std::{end_timer, start_timer};
 use std::{collections::HashMap, env, env::current_dir, time::Instant};
 
 use nova_scotia::{
-    circom::reader::load_r1cs, create_public_params, create_recursive_circuit, FileLocation, F1,
-    G2, S1, S2,
+    circom::{circuit::CircomCircuit, reader::load_r1cs}, create_public_params, create_recursive_circuit, FileLocation, F1,
+    G1, G2, S1, S2
 };
 // Ignore create_recursive_circuit
 
-use nova_snark::{traits::Group, CompressedSNARK};
+use nova_snark::{traits::{circuit::TrivialTestCircuit, Group}, CompressedSNARK, RecursiveSNARK};
 
 extern crate wee_alloc;
 
@@ -20,12 +20,15 @@ extern crate wee_alloc;
 #[global_allocator]
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
+type C1 = CircomCircuit<<G1 as Group>::Scalar>;
+type C2 = TrivialTestCircuit<<G2 as Group>::Scalar>;
+
 /// Creates a recursive SNARK, that proves the recursive (cyclic) calculation, of 4 values using Poseidon hashing function
 /// 
 /// Panic
 /// 
 /// Code panics in case needed `poseidon_test_nova.r1cs` and/or `poseidon_test_nova.wasm` do no exist at specified paths 
-pub fn recursive_hashing(depth: usize) {
+pub fn recursive_hashing_proove(depth: usize) -> RecursiveSNARK<G1, G2, C1, C2> {
     println! {"Using recursive depth: {:?} times depth_per_fold in circuit (default 10 or 100, check yourself! :D)", depth};
 
     let iteration_count = depth;
@@ -74,7 +77,6 @@ pub fn recursive_hashing(depth: usize) {
     );
 
     // create a recursive SNARK
-    let timer_create_proof = start_timer!(|| "Create RecursiveSNARK");
     let recursive_snark = create_recursive_circuit(
         FileLocation::PathBuf(witness_generator_wasm),
         r1cs,
@@ -83,43 +85,6 @@ pub fn recursive_hashing(depth: usize) {
         &pp,
     )
     .unwrap();
-    end_timer!(timer_create_proof);
 
-    // TODO: empty?
-    let z0_secondary = vec![<G2 as Group>::Scalar::zero()];
-
-    // verify the recursive SNARK
-    println!("Verifying a RecursiveSNARK...");
-    let timer_verify_snark = start_timer!(|| "verify SNARK");
-    let res = recursive_snark.verify(
-        &pp,
-        iteration_count,
-        start_public_input.clone(),
-        z0_secondary.clone(),
-    );
-    assert!(res.is_ok());
-
-    end_timer!(timer_verify_snark);
-
-    // produce a compressed SNARK
-    let timer_gen_compressed_snark =
-        start_timer!(|| "Generate a CompressedSNARK using Spartan with IPA-PC");
-    // pk - public key
-    // vk - verifying key
-    let (pk, vk) = CompressedSNARK::<_, _, _, _, S1, S2>::setup(&pp).unwrap();
-    let res = CompressedSNARK::<_, _, _, _, S1, S2>::prove(&pp, &pk, &recursive_snark);
-    assert!(res.is_ok());
-    let compressed_snark = res.unwrap();
-    end_timer!(timer_gen_compressed_snark);
-
-    let timer_verify_compressed_snark = start_timer!(|| "Verify CompressedSNARK");
-    let res = compressed_snark.verify(
-        &vk,
-        iteration_count,
-        start_public_input.clone(),
-        z0_secondary,
-    );
-    end_timer!(timer_verify_compressed_snark);
-
-    assert!(res.is_ok());
+    recursive_snark
 }

@@ -23,7 +23,7 @@ fn bench_recursive_snark(c: &mut Criterion) {
 
     group.bench_function("Prove", |b| {
       b.iter(|| {
-        nova_bench::recursive_hashing(k);
+        nova_bench::recursive_hashing_proove(k);
       })
     });
     group.finish();
