@@ -8,12 +8,12 @@ use criterion::*;
 criterion_group! {
 name = recursive_snark;
 config = Criterion::default().warm_up_time(Duration::from_millis(3000));
-targets = bench_recursive_snark
+targets = bench_recursive_snark_proof
 }
 
 criterion_main!(recursive_snark);
 
-fn bench_recursive_snark(c: &mut Criterion) {
+fn bench_recursive_snark_proof(c: &mut Criterion) {
     let cases = vec![3, 10, 100];
 
     let mut rng = XorShiftRng::from_seed(TEST_SEED);
@@ -45,17 +45,8 @@ fn bench_recursive_snark(c: &mut Criterion) {
         let (z0, circuits) =
         PoseidonHashChainCircuit::eval_and_make_circuits(num_steps, initial_state.clone());
 
-        let recursive_snark =
-            NovaChainHashProof::prove_recursively(&pp, &circuits, z0.clone()).unwrap();
-
-        let zi = calculate_chain_hash(initial_state, num_steps);
-
-        let res = recursive_snark.verify(&pp, num_steps, z0.clone(), &zi);
-
-        if !res.is_ok() {
-            dbg!(&res);
-        }
-        assert!(res.unwrap());
+        
+        NovaChainHashProof::prove_recursively(&pp, &circuits, z0.clone()).unwrap();
       })
     });
     group.finish();
