@@ -67,6 +67,24 @@ fn bench_recursive_snark_verify(c: &mut Criterion) {
   // produce public parameters
   let pp = public_params();
 
+  println!(
+      "Number of constraints per step (primary circuit): {}",
+      pp.num_constraints().0
+  );
+  println!(
+      "Number of constraints per step (secondary circuit): {}",
+      pp.num_constraints().1
+  );
+
+  println!(
+      "Number of variables per step (primary circuit): {}",
+      pp.num_variables().0
+  );
+  println!(
+      "Number of variables per step (secondary circuit): {}",
+      pp.num_variables().1
+  );
+
 
 
 for num_steps in cases {
