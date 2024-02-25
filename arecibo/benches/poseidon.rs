@@ -8,12 +8,12 @@ use criterion::*;
 criterion_group! {
 name = recursive_snark;
 config = Criterion::default().warm_up_time(Duration::from_millis(3000));
-targets = bench_recursive_snark
+targets = bench_recursive_snark_prove
 }
 
 criterion_main!(recursive_snark);
 
-fn bench_recursive_snark(c: &mut Criterion) {
+fn bench_recursive_snark_prove(c: &mut Criterion) {
     let cases = vec![3, 10, 100];
 
     let mut rng = XorShiftRng::from_seed(TEST_SEED);
