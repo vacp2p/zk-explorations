@@ -25,7 +25,6 @@ fn bench_recursive_snark_proof(c: &mut Criterion) {
     let x1 = Field::random(&mut rng);
     let x2 = Field::random(&mut rng);
     let x3 = Field::random(&mut rng);
-
     // produce public parameters
     let pp = public_params();
 
@@ -58,7 +57,6 @@ fn bench_recursive_snark_verify(c: &mut Criterion) {
     let x1 = Field::random(&mut rng);
     let x2 = Field::random(&mut rng);
     let x3 = Field::random(&mut rng);
-
     // produce public parameters
     let pp = public_params();
 
