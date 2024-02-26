@@ -3,12 +3,15 @@ use ark_std::{end_timer, start_timer};
 use std::{collections::HashMap, env, env::current_dir, time::Instant};
 
 use nova_scotia::{
-    circom::{circuit::CircomCircuit, reader::load_r1cs}, create_public_params, create_recursive_circuit, FileLocation, F1,
-    G1, G2, S1, S2
+    circom::{circuit::CircomCircuit, reader::load_r1cs},
+    create_public_params, create_recursive_circuit, FileLocation, F1, G1, G2, S1, S2,
 };
 // Ignore create_recursive_circuit
 
-use nova_snark::{traits::{circuit::TrivialTestCircuit, Group}, CompressedSNARK, RecursiveSNARK};
+use nova_snark::{
+    traits::{circuit::TrivialTestCircuit, Group},
+    CompressedSNARK, RecursiveSNARK,
+};
 
 extern crate wee_alloc;
 
@@ -24,10 +27,10 @@ type C1 = CircomCircuit<<G1 as Group>::Scalar>;
 type C2 = TrivialTestCircuit<<G2 as Group>::Scalar>;
 
 /// Creates a recursive SNARK, that proves the recursive (cyclic) calculation, of 4 values using Poseidon hashing function
-/// 
+///
 /// Panic
-/// 
-/// Code panics in case needed `poseidon_test_nova.r1cs` and/or `poseidon_test_nova.wasm` do no exist at specified paths 
+///
+/// Code panics in case needed `poseidon_test_nova.r1cs` and/or `poseidon_test_nova.wasm` do no exist at specified paths
 pub fn recursive_hashing_proove(depth: usize) -> RecursiveSNARK<G1, G2, C1, C2> {
     println! {"Using recursive depth: {:?} times depth_per_fold in circuit (default 10 or 100, check yourself! :D)", depth};
 
