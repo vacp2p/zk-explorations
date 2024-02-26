@@ -21,10 +21,10 @@ extern crate wee_alloc;
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
 /// Creates a recursive SNARK, that proves the recursive (cyclic) calculation, of 4 values using Poseidon hashing function
-/// 
+///
 /// Panic
-/// 
-/// Code panics in case needed `poseidon_test_nova.r1cs` and/or `poseidon_test_nova.wasm` do no exist at specified paths 
+///
+/// Code panics in case needed `poseidon_test_nova.r1cs` and/or `poseidon_test_nova.wasm` do no exist at specified paths
 fn recursive_hashing(depth: usize) {
     println! {"Using recursive depth: {:?} times depth_per_fold in circuit (default 10 or 100, check yourself! :D)", depth};
 
