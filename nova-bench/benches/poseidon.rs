@@ -135,36 +135,15 @@ for k in cases {
 )
 .unwrap();
 
+let z0_secondary = vec![<G2 as Group>::Scalar::zero()];
+
   let mut group = c.benchmark_group(format!(
     "Nova-Circom-Poseidon-num-steps-{}",
     k
   ));
   group.sample_size(10);
 
-  let z0_secondary = vec![<G2 as Group>::Scalar::zero()];
-
-    // Creating public parameters
-    let pp = create_public_params(r1cs.clone());
-
-    println!(
-        "Number of constraints per step (primary circuit): {}",
-        pp.num_constraints().0
-    );
-    println!(
-        "Number of constraints per step (secondary circuit): {}",
-        pp.num_constraints().1
-    );
-
-    println!(
-        "Number of variables per step (primary circuit): {}",
-        pp.num_variables().0
-    );
-    println!(
-        "Number of variables per step (secondary circuit): {}",
-        pp.num_variables().1
-    );
-
-
+  
   group.bench_function("Verify", |b| {
     b.iter(|| {
       let res = recursive_snark.verify(
