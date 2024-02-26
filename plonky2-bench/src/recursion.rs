@@ -1,3 +1,5 @@
+use std::borrow::Borrow;
+
 use anyhow::Result;
 
 use plonky2::field::types::{Field, PrimeField64};
@@ -10,6 +12,7 @@ use plonky2::plonk::circuit_data::CircuitConfig;
 use plonky2::plonk::config::{GenericConfig, PoseidonGoldilocksConfig};
 use plonky2::recursion::cyclic_recursion::check_cyclic_proof_verifier_data;
 use plonky2::recursion::dummy_circuit::cyclic_base_proof;
+use plonky2::gates::gate::Gate;
 
 use crate::common::common_data;
 
@@ -111,6 +114,13 @@ pub fn recursion(d: usize) -> Result<()> {
         &cyclic_circuit_data.common,
     )?;
 
+    let num_constr: usize = common_data.gates.iter().map(|gate| gate.0.num_constraints()).sum();
+
+    println!(
+        "Number of constraints: {}",
+        num_constr
+    );
+
     let initial_hash = &proof.public_inputs[..4];
     let hash = &proof.public_inputs[4..8];
     let counter = proof.public_inputs[8];
@@ -136,7 +146,7 @@ pub fn recursion(d: usize) -> Result<()> {
 fn iterate_poseidon<F: RichField>(initial_state: [F; 4], n: usize) -> [F; 4] {
     let mut current = initial_state;
     for _ in 0..n {
-        current = hash_n_to_hash_no_pad::<F, PoseidonPermutation>(&current).elements;
+        current = hash_n_to_hash_no_pad::<F, PoseidonPermutation<F>>(&current).elements;
     }
     current
 }
