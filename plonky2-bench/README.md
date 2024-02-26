@@ -11,5 +11,5 @@ cargo build
 Running
 
 ```bash
-cargo run
+cargo bench
 ```
