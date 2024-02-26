@@ -3,6 +3,7 @@ use std::borrow::Borrow;
 use anyhow::Result;
 
 use plonky2::field::types::{Field, PrimeField64};
+use plonky2::gates::gate::Gate;
 use plonky2::hash::hash_types::{HashOutTarget, RichField};
 use plonky2::hash::hashing::hash_n_to_hash_no_pad;
 use plonky2::hash::poseidon::{PoseidonHash, PoseidonPermutation};
@@ -12,16 +13,15 @@ use plonky2::plonk::circuit_data::CircuitConfig;
 use plonky2::plonk::config::{GenericConfig, PoseidonGoldilocksConfig};
 use plonky2::recursion::cyclic_recursion::check_cyclic_proof_verifier_data;
 use plonky2::recursion::dummy_circuit::cyclic_base_proof;
-use plonky2::gates::gate::Gate;
 
 use crate::common::common_data;
 
 /// The variable ’d’ specifies the depth of recursion.
 /// `D` denotes the degree of the extension
 /// `C` denotes the configuration
-/// 
+///
 /// Error
-/// 
+///
 /// As recursion depth of 0 is makes no sence, we error out
 /// with a message "recursion count has to be at least 1"
 pub fn recursion(d: usize) -> Result<()> {
@@ -114,12 +114,13 @@ pub fn recursion(d: usize) -> Result<()> {
         &cyclic_circuit_data.common,
     )?;
 
-    let num_constr: usize = common_data.gates.iter().map(|gate| gate.0.num_constraints()).sum();
+    let num_constr: usize = common_data
+        .gates
+        .iter()
+        .map(|gate| gate.0.num_constraints())
+        .sum();
 
-    println!(
-        "Number of constraints: {}",
-        num_constr
-    );
+    println!("Number of constraints: {}", num_constr);
 
     let initial_hash = &proof.public_inputs[..4];
     let hash = &proof.public_inputs[4..8];
@@ -139,7 +140,7 @@ pub fn recursion(d: usize) -> Result<()> {
 }
 
 /// Hash `n` times `initial_state`.
-/// 
+///
 /// F denotes a field that implements `RichField` trait
 /// we are hashing 4 values, so `initial_state` is an array of length 4
 /// `n` is the number of hashings we need to perform
