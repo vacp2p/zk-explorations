@@ -1,8 +1,12 @@
 use core::time::Duration;
+use std::path::PathBuf;
 use criterion::*;
 
 use halo2_proofs::plonk::Circuit;
-use snark_verifier_sdk::halo2::{gen_srs};
+use halo2_proofs::poly::kzg::multiopen::{ProverGWC, VerifierGWC};
+use halo2curves::bn256::Bn256;
+use snark_verifier::pcs::kzg::{Gwc19, KzgAs};
+use snark_verifier_sdk::halo2::{gen_proof, gen_srs};
 use snark_verifier_sdk::{
     gen_pk,
     halo2::{aggregation::AggregationCircuit},
@@ -42,13 +46,10 @@ fn bench_recursive_snark(c: &mut Criterion) {
             None,
         );
 
-        snark_verifier_sdk::halo2::gen_proof_gwc(
-          &params,
-          &pk,
-          agg_circuit.clone(),
-          agg_circuit.instances(),
-          None,
-      );
+        let circuit = agg_circuit.clone();
+        let instances = agg_circuit.instances();
+
+        gen_proof::<AggregationCircuit<KzgAs<Bn256, Gwc19>>, ProverGWC<_>, VerifierGWC<_>>(&params, &pk, circuit, instances, None::<(PathBuf, PathBuf)>)
     
       })
     });
