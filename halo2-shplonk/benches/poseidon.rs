@@ -42,7 +42,7 @@ fn bench_recursive_snark(c: &mut Criterion) {
             None,
         );
 
-        snark_verifier_sdk::halo2::gen_proof_gwc(
+        snark_verifier_sdk::halo2::gen_proof_shplonk(
           &params,
           &pk,
           agg_circuit.clone(),
