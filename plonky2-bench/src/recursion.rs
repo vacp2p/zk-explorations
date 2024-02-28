@@ -126,6 +126,7 @@ pub fn recursion(d: usize) -> Result<()> {
         .map(|gate| gate.0.num_constraints())
         .sum();
 
+    println!("");
     println!("Number of constraints: {}", num_constr);
 
     let initial_hash = &proof.public_inputs[..4];

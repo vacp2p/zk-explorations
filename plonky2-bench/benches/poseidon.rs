@@ -88,6 +88,7 @@ fn bench_recursive_snark_proove(c: &mut Criterion) {
             .map(|gate| gate.0.num_constraints())
             .sum();
 
+        println!("");
         println!("Number of constraints: {}", num_constr);
 
         let initial_hash = &proof.public_inputs[..4];
