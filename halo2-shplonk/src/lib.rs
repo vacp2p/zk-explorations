@@ -1,11 +1,12 @@
 use ark_std::{end_timer, start_timer};
+use halo2_common::application;
 use halo2_curves::bn256::Fr;
 use halo2_proofs::circuit::Value;
 use halo2_proofs::halo2curves as halo2_curves;
 use halo2_proofs::plonk::Circuit;
 use halo2_proofs::{halo2curves::bn256::Bn256, poly::kzg::commitment::ParamsKZG};
-use rand::RngCore;
 use rand::rngs::OsRng;
+use rand::RngCore;
 use snark_verifier_sdk::halo2::gen_srs;
 use snark_verifier_sdk::{
     gen_pk,
@@ -15,7 +16,6 @@ use snark_verifier_sdk::{
 use snark_verifier_sdk::{CircuitExt, SHPLONK};
 use std::marker::PhantomData;
 use std::path::Path;
-use halo2_common::application;
 
 pub fn gen_application_snark(params: &ParamsKZG<Bn256>) -> Snark {
     let mut rng = OsRng;
@@ -45,11 +45,7 @@ fn main_function() {
     let agg_circuit = AggregationCircuit::<SHPLONK>::new(&params, snarks);
     println!("after agg_circuit");
     let start0 = start_timer!(|| "gen vk & pk");
-    let pk = gen_pk(
-        &params,
-        &agg_circuit.without_witnesses(),
-        None,
-    );
+    let pk = gen_pk(&params, &agg_circuit.without_witnesses(), None);
     end_timer!(start0);
 
     snark_verifier_sdk::halo2::gen_proof_shplonk(
