@@ -2,16 +2,22 @@ use core::time::Duration;
 use std::path::PathBuf;
 use criterion::*;
 
-use halo2_proofs::plonk::Circuit;
+use halo2_proofs::plonk::{create_proof, verify_proof, Circuit};
+use halo2_proofs::poly::commitment::ParamsProver;
 use halo2_proofs::poly::kzg::multiopen::{ProverGWC, VerifierGWC};
+use halo2_proofs::poly::kzg::strategy::AccumulatorStrategy;
+use halo2_proofs::poly::VerificationStrategy;
 use halo2curves::bn256::Bn256;
+use itertools::Itertools;
+use rand::rngs::StdRng;
+use rand::SeedableRng;
 use snark_verifier::pcs::kzg::{Gwc19, KzgAs};
-use snark_verifier_sdk::halo2::{gen_proof, gen_srs};
+use snark_verifier_sdk::halo2::{gen_proof, gen_srs, PoseidonTranscript, POSEIDON_SPEC};
 use snark_verifier_sdk::{
     gen_pk,
     halo2::{aggregation::AggregationCircuit},
 };
-use snark_verifier_sdk::{CircuitExt, GWC};
+use snark_verifier_sdk::{CircuitExt, NativeLoader, GWC};
 
 criterion_group! {
     name = recursive_snark;
@@ -49,9 +55,34 @@ fn bench_recursive_snark(c: &mut Criterion) {
 
     group.bench_function("Prove", |b| {
       b.iter(|| {
+  
+      let instances = instances.iter().map(Vec::as_slice).collect_vec();
+  
 
+      let mut transcript =
+          PoseidonTranscript::<NativeLoader, _>::from_spec(vec![], POSEIDON_SPEC.clone());
+      let rng = StdRng::from_entropy();
+      create_proof::<_, ProverGWC<_>, _, _, _, _>(&params, &pk, &[circuit.clone()], &[&instances], rng, &mut transcript)
+          .unwrap();
+      let proof = transcript.finalize();
+  
 
-        gen_proof::<AggregationCircuit<KzgAs<Bn256, Gwc19>>, ProverGWC<_>, VerifierGWC<_>>(&params, &pk, circuit.clone(), instances.clone(), None::<(PathBuf, PathBuf)>)
+  
+      // validate proof before caching
+      assert!({
+          let mut transcript_read =
+              PoseidonTranscript::<NativeLoader, &[u8]>::from_spec(&proof[..], POSEIDON_SPEC.clone());
+          VerificationStrategy::<_, VerifierGWC<_>>::finalize(
+              verify_proof::<_, VerifierGWC<_>, _, _, _>(
+                  params.verifier_params(),
+                  pk.get_vk(),
+                  AccumulatorStrategy::new(params.verifier_params()),
+                  &[instances.as_slice()],
+                  &mut transcript_read,
+              )
+              .unwrap(),
+          )
+      });
     
       })
     });
