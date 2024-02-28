@@ -35,21 +35,23 @@ fn bench_recursive_snark(c: &mut Criterion) {
     ));
     group.sample_size(10);
 
+    let snarks: Vec<_> = vec![0; k].into_iter().map(|_| halo2_gwc::gen_application_snark(&params_app)).collect();
+
+    let agg_circuit = AggregationCircuit::<GWC>::new(&params, snarks);
+    let pk = gen_pk(
+        &params,
+        &agg_circuit.without_witnesses(),
+        None,
+    );
+
+    let circuit = agg_circuit.clone();
+    let instances = agg_circuit.instances();
+
     group.bench_function("Prove", |b| {
       b.iter(|| {
-        let snarks: Vec<_> = vec![0; k].into_iter().map(|_| halo2_gwc::gen_application_snark(&params_app)).collect();
 
-        let agg_circuit = AggregationCircuit::<GWC>::new(&params, snarks);
-        let pk = gen_pk(
-            &params,
-            &agg_circuit.without_witnesses(),
-            None,
-        );
 
-        let circuit = agg_circuit.clone();
-        let instances = agg_circuit.instances();
-
-        gen_proof::<AggregationCircuit<KzgAs<Bn256, Gwc19>>, ProverGWC<_>, VerifierGWC<_>>(&params, &pk, circuit, instances, None::<(PathBuf, PathBuf)>)
+        gen_proof::<AggregationCircuit<KzgAs<Bn256, Gwc19>>, ProverGWC<_>, VerifierGWC<_>>(&params, &pk, circuit.clone(), instances.clone(), None::<(PathBuf, PathBuf)>)
     
       })
     });
