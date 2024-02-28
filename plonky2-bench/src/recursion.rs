@@ -11,7 +11,9 @@ use plonky2::hash::poseidon::{PoseidonHash, PoseidonPermutation};
 use plonky2::iop::target::BoolTarget;
 use plonky2::iop::witness::{PartialWitness, WitnessWrite};
 use plonky2::plonk::circuit_builder::CircuitBuilder;
-use plonky2::plonk::circuit_data::{CircuitConfig, CircuitData, CommonCircuitData, VerifierCircuitTarget};
+use plonky2::plonk::circuit_data::{
+    CircuitConfig, CircuitData, CommonCircuitData, VerifierCircuitTarget,
+};
 use plonky2::plonk::config::{GenericConfig, PoseidonGoldilocksConfig};
 use plonky2::plonk::proof::ProofWithPublicInputsTarget;
 use plonky2::recursion::cyclic_recursion::check_cyclic_proof_verifier_data;
@@ -146,9 +148,15 @@ pub fn recursion(d: usize) -> Result<()> {
     cyclic_circuit_data.verify(proof)
 }
 
-pub fn init(d: usize) -> Result<(CircuitBuilder<GoldilocksField, D>, CommonCircuitData<GoldilocksField, D>, BoolTarget, ProofWithPublicInputsTarget<D>, VerifierCircuitTarget)> {
-
-
+pub fn init(
+    d: usize,
+) -> Result<(
+    CircuitBuilder<GoldilocksField, D>,
+    CommonCircuitData<GoldilocksField, D>,
+    BoolTarget,
+    ProofWithPublicInputsTarget<D>,
+    VerifierCircuitTarget,
+)> {
     if d == 0 {
         return Err(anyhow::Error::msg("recursion count has to be at least 1"));
     }
@@ -201,7 +209,13 @@ pub fn init(d: usize) -> Result<(CircuitBuilder<GoldilocksField, D>, CommonCircu
         &common_data,
     )?;
 
-    Ok((builder, common_data, condition, inner_cyclic_proof_with_pis, verifier_data_target))
+    Ok((
+        builder,
+        common_data,
+        condition,
+        inner_cyclic_proof_with_pis,
+        verifier_data_target,
+    ))
 }
 
 /// Hash `n` times `initial_state`.
