@@ -24,12 +24,12 @@ use snark_verifier_sdk::{read_instances, write_instances, CircuitExt, NativeLoad
 criterion_group! {
     name = recursive_snark;
     config = Criterion::default().warm_up_time(Duration::from_millis(3000));
-    targets = bench_recursive_snark
+    targets = bench_recursive_snark_proove,bench_recursive_snark_verify
 }
     
 criterion_main!(recursive_snark);
 
-fn bench_recursive_snark(c: &mut Criterion) {
+fn bench_recursive_snark_proove(c: &mut Criterion) {
   let params_app = gen_srs(8);
   let params = gen_srs(23);
 
@@ -71,6 +71,58 @@ fn bench_recursive_snark(c: &mut Criterion) {
       create_proof::<_, ProverSHPLONK<_>, _, _, _, _>(&params, &pk, &[circuit.clone()], &[&instances], rng.clone(), &mut transcript)
           .unwrap();
       let proof = transcript.finalize();
+  
+  
+      })
+    });
+    group.finish();
+  }
+}
+
+fn bench_recursive_snark_verify(c: &mut Criterion) {
+  let params_app = gen_srs(8);
+  let params = gen_srs(23);
+
+  let cases = vec![3, 10, 100];
+
+  for k in cases {
+
+    let mut group = c.benchmark_group(format!(
+      "Halo2-SHPLONK-Poseidon-num-steps-{}",
+      k
+    ));
+    group.sample_size(10);
+
+    let snarks: Vec<_> = vec![0; k].into_iter().map(|_| halo2_shplonk::gen_application_snark(&params_app)).collect();
+
+        let agg_circuit = AggregationCircuit::<SHPLONK>::new(&params, snarks);
+        let pk = gen_pk(
+            &params,
+            &agg_circuit.without_witnesses(),
+            None,
+        );
+
+    let circuit = agg_circuit.clone();
+    let instances = agg_circuit.instances();
+    let rng = StdRng::from_entropy();
+    let instances = instances.iter().map(Vec::as_slice).collect_vec();
+
+    let mut transcript =
+    PoseidonTranscript::<NativeLoader, _>::from_spec(vec![], POSEIDON_SPEC.clone());
+
+create_proof::<_, ProverSHPLONK<_>, _, _, _, _>(&params, &pk, &[circuit.clone()], &[&instances], rng.clone(), &mut transcript)
+    .unwrap();
+let proof = transcript.finalize();
+
+    group.bench_function("Prove", |b| {
+      b.iter(|| {
+        
+  
+      
+  
+  
+  
+
   
   
       // validate proof before caching
