@@ -36,9 +36,7 @@ fn bench_recursive_snark(c: &mut Criterion) {
     ));
     group.sample_size(10);
 
-    group.bench_function("Prove", |b| {
-      b.iter(|| {
-        let snarks: Vec<_> = vec![0; k].into_iter().map(|_| halo2_shplonk::gen_application_snark(&params_app)).collect();
+    let snarks: Vec<_> = vec![0; k].into_iter().map(|_| halo2_shplonk::gen_application_snark(&params_app)).collect();
 
         let agg_circuit = AggregationCircuit::<SHPLONK>::new(&params, snarks);
         let pk = gen_pk(
@@ -46,6 +44,10 @@ fn bench_recursive_snark(c: &mut Criterion) {
             &agg_circuit.without_witnesses(),
             None,
         );
+
+    group.bench_function("Prove", |b| {
+      b.iter(|| {
+        
 
 
         gen_proof::<AggregationCircuit<KzgAs<Bn256, Bdfg21>>, ProverSHPLONK<_>, VerifierSHPLONK<_>>(&params, &pk, agg_circuit.clone(), agg_circuit.instances(), None::<(PathBuf, PathBuf)>);
