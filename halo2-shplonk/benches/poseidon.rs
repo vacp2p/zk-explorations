@@ -54,19 +54,21 @@ fn bench_recursive_snark(c: &mut Criterion) {
 
     let circuit = agg_circuit.clone();
     let instances = agg_circuit.instances();
+    let rng = StdRng::from_entropy();
+    let instances = instances.iter().map(Vec::as_slice).collect_vec();
 
     group.bench_function("Prove", |b| {
       b.iter(|| {
         
   
-      let instances = instances.iter().map(Vec::as_slice).collect_vec();
+      
   
   
   
       let mut transcript =
           PoseidonTranscript::<NativeLoader, _>::from_spec(vec![], POSEIDON_SPEC.clone());
-      let rng = StdRng::from_entropy();
-      create_proof::<_, ProverSHPLONK<_>, _, _, _, _>(&params, &pk, &[circuit.clone()], &[&instances], rng, &mut transcript)
+      
+      create_proof::<_, ProverSHPLONK<_>, _, _, _, _>(&params, &pk, &[circuit.clone()], &[&instances], rng.clone(), &mut transcript)
           .unwrap();
       let proof = transcript.finalize();
   
