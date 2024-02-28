@@ -1,10 +1,7 @@
-use std::borrow::Borrow;
-
 use anyhow::{Ok, Result};
 
 use plonky2::field::goldilocks_field::GoldilocksField;
 use plonky2::field::types::{Field, PrimeField64};
-use plonky2::gates::gate::Gate;
 use plonky2::hash::hash_types::{HashOutTarget, RichField};
 use plonky2::hash::hashing::hash_n_to_hash_no_pad;
 use plonky2::hash::poseidon::{PoseidonHash, PoseidonPermutation};
@@ -12,7 +9,7 @@ use plonky2::iop::target::BoolTarget;
 use plonky2::iop::witness::{PartialWitness, WitnessWrite};
 use plonky2::plonk::circuit_builder::CircuitBuilder;
 use plonky2::plonk::circuit_data::{
-    CircuitConfig, CircuitData, CommonCircuitData, VerifierCircuitTarget,
+    CircuitConfig, CommonCircuitData, VerifierCircuitTarget,
 };
 use plonky2::plonk::config::{GenericConfig, PoseidonGoldilocksConfig};
 use plonky2::plonk::proof::ProofWithPublicInputsTarget;
