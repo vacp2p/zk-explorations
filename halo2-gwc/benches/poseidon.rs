@@ -1,18 +1,15 @@
 use core::time::Duration;
 use criterion::*;
-use std::path::PathBuf;
 
 use halo2_proofs::plonk::{create_proof, verify_proof, Circuit};
 use halo2_proofs::poly::commitment::ParamsProver;
 use halo2_proofs::poly::kzg::multiopen::{ProverGWC, VerifierGWC};
 use halo2_proofs::poly::kzg::strategy::AccumulatorStrategy;
 use halo2_proofs::poly::VerificationStrategy;
-use halo2curves::bn256::Bn256;
 use itertools::Itertools;
 use rand::rngs::StdRng;
 use rand::SeedableRng;
-use snark_verifier::pcs::kzg::{Gwc19, KzgAs};
-use snark_verifier_sdk::halo2::{gen_proof, gen_srs, PoseidonTranscript, POSEIDON_SPEC};
+use snark_verifier_sdk::halo2::{gen_srs, PoseidonTranscript, POSEIDON_SPEC};
 use snark_verifier_sdk::{gen_pk, halo2::aggregation::AggregationCircuit};
 use snark_verifier_sdk::{CircuitExt, NativeLoader, GWC};
 
