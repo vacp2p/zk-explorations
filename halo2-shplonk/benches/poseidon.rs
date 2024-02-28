@@ -1,22 +1,17 @@
 use core::time::Duration;
 use criterion::*;
-use std::fs;
-use std::path::{Path, PathBuf};
 
-use halo2_gadgets::sinsemilla::primitives::C;
-use halo2_proofs::plonk::{create_proof, verify_proof, Circuit, Instance};
+use halo2_proofs::plonk::{create_proof, verify_proof, Circuit};
 use halo2_proofs::poly::commitment::ParamsProver;
 use halo2_proofs::poly::kzg::multiopen::{ProverSHPLONK, VerifierSHPLONK};
 use halo2_proofs::poly::kzg::strategy::AccumulatorStrategy;
 use halo2_proofs::poly::VerificationStrategy;
-use halo2curves::bn256::Bn256;
 use itertools::Itertools;
 use rand::rngs::StdRng;
 use rand::SeedableRng;
-use snark_verifier::pcs::kzg::{Bdfg21, KzgAs};
-use snark_verifier_sdk::halo2::{gen_proof, gen_srs, PoseidonTranscript, POSEIDON_SPEC};
+use snark_verifier_sdk::halo2::{gen_srs, PoseidonTranscript, POSEIDON_SPEC};
 use snark_verifier_sdk::{gen_pk, halo2::aggregation::AggregationCircuit};
-use snark_verifier_sdk::{read_instances, write_instances, CircuitExt, NativeLoader, SHPLONK};
+use snark_verifier_sdk::{CircuitExt, NativeLoader, SHPLONK};
 
 criterion_group! {
     name = recursive_snark;
@@ -63,7 +58,7 @@ fn bench_recursive_snark_proove(c: &mut Criterion) {
                     &mut transcript,
                 )
                 .unwrap();
-                let proof = transcript.finalize();
+                transcript.finalize();
             })
         });
         group.finish();
