@@ -11,6 +11,7 @@ use plonky2::{
         cyclic_recursion::check_cyclic_proof_verifier_data, dummy_circuit::cyclic_base_proof,
     },
 };
+use plonky2_bench::recursion::check_hash_value;
 use plonky2_bench::{
     recursion::{init, iterate_poseidon, C, D, F},
 };
@@ -90,18 +91,8 @@ fn bench_recursive_snark_proove(c: &mut Criterion) {
         println!("");
         println!("Number of constraints: {}", num_constr);
 
-        let initial_hash = &proof.public_inputs[..4];
-        let hash = &proof.public_inputs[4..8];
-        let counter = proof.public_inputs[8];
-        let expected_hash: [F; 4] = iterate_poseidon(
-            initial_hash.try_into().unwrap(),
-            counter.to_canonical_u64() as usize,
-        );
-
-        // make sure the end result makes sense
-        if hash != expected_hash {
-            panic!("hash was not calculated right");
-        }
+        check_hash_value(&proof).unwrap();
+        
         group.finish();
     }
 }
@@ -161,18 +152,7 @@ fn bench_recursive_snark_verify(c: &mut Criterion) {
 
         println!("Number of constraints: {}", num_constr);
 
-        let initial_hash = &proof.public_inputs[..4];
-        let hash = &proof.public_inputs[4..8];
-        let counter = proof.public_inputs[8];
-        let expected_hash: [F; 4] = iterate_poseidon(
-            initial_hash.try_into().unwrap(),
-            counter.to_canonical_u64() as usize,
-        );
-
-        // make sure the end result makes sense
-        if hash != expected_hash {
-            panic!("hash was not calculated right");
-        }
+        check_hash_value(&proof).unwrap();
 
         group.bench_function("Verify", |b| {
             b.iter(|| cyclic_circuit_data.verify(proof.clone()))

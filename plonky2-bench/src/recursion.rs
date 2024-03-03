@@ -12,7 +12,7 @@ use plonky2::plonk::circuit_data::{
     CircuitConfig, CommonCircuitData, VerifierCircuitTarget,
 };
 use plonky2::plonk::config::{GenericConfig, PoseidonGoldilocksConfig};
-use plonky2::plonk::proof::ProofWithPublicInputsTarget;
+use plonky2::plonk::proof::{ProofWithPublicInputs, ProofWithPublicInputsTarget};
 use plonky2::recursion::cyclic_recursion::check_cyclic_proof_verifier_data;
 use plonky2::recursion::dummy_circuit::cyclic_base_proof;
 
@@ -41,51 +41,8 @@ pub fn recursion(d: usize) -> Result<()> {
 
     let d = d - 1;
 
-    let config = CircuitConfig::standard_recursion_config();
-    let mut builder = CircuitBuilder::<F, D>::new(config);
-    let one = builder.one();
-
-    let initial_hash_target = builder.add_virtual_hash();
-    builder.register_public_inputs(&initial_hash_target.elements);
-    let current_hash_in = builder.add_virtual_hash();
-    let current_hash_out =
-        builder.hash_n_to_hash_no_pad::<PoseidonHash>(current_hash_in.elements.to_vec());
-    builder.register_public_inputs(&current_hash_out.elements);
-    let counter = builder.add_virtual_public_input();
-
-    let mut common_data = common_data::<F, C, D>();
-    let verifier_data_target = builder.add_verifier_data_public_inputs();
-    common_data.num_public_inputs = builder.num_public_inputs();
-
-    let condition = builder.add_virtual_bool_target_safe();
-
-    let inner_cyclic_proof_with_pis = builder.add_virtual_proof_with_pis(&common_data);
-    let inner_cyclic_pis = &inner_cyclic_proof_with_pis.public_inputs;
-    let inner_cyclic_initial_hash = HashOutTarget::try_from(&inner_cyclic_pis[0..4]).unwrap();
-    let inner_cyclic_latest_hash = HashOutTarget::try_from(&inner_cyclic_pis[4..8]).unwrap();
-    let inner_cyclic_counter = inner_cyclic_pis[8];
-
-    builder.connect_hashes(initial_hash_target, inner_cyclic_initial_hash);
-
-    let actual_hash_in = HashOutTarget {
-        elements: core::array::from_fn(|i| {
-            builder.select(
-                condition,
-                inner_cyclic_latest_hash.elements[i],
-                initial_hash_target.elements[i],
-            )
-        }),
-    };
-    builder.connect_hashes(current_hash_in, actual_hash_in);
-
-    let new_counter = builder.mul_add(condition.target, inner_cyclic_counter, one);
-    builder.connect(counter, new_counter);
-
-    builder.conditionally_verify_cyclic_proof_or_dummy::<C>(
-        condition,
-        &inner_cyclic_proof_with_pis,
-        &common_data,
-    )?;
+    let (builder, common_data, condition, inner_cyclic_proof_with_pis, verifier_data_target) =
+            init(d)?;
 
     let cyclic_circuit_data = builder.build::<C>();
 
@@ -129,18 +86,7 @@ pub fn recursion(d: usize) -> Result<()> {
     println!("");
     println!("Number of constraints: {}", num_constr);
 
-    let initial_hash = &proof.public_inputs[..4];
-    let hash = &proof.public_inputs[4..8];
-    let counter = proof.public_inputs[8];
-    let expected_hash: [F; 4] = iterate_poseidon(
-        initial_hash.try_into().unwrap(),
-        counter.to_canonical_u64() as usize,
-    );
-
-    // make sure the end result makes sense
-    if hash != expected_hash {
-        return Err(anyhow::Error::msg("hash was not calculated right"));
-    }
+    check_hash_value(&proof)?;
 
     // verify proof
     cyclic_circuit_data.verify(proof)
@@ -225,4 +171,21 @@ pub fn iterate_poseidon<F: RichField>(initial_state: [F; 4], n: usize) -> [F; 4]
         current = hash_n_to_hash_no_pad::<F, PoseidonPermutation<F>>(&current).elements;
     }
     current
+}
+
+pub fn check_hash_value(proof: &ProofWithPublicInputs<GoldilocksField, PoseidonGoldilocksConfig, D>) -> Result<()> {
+    let initial_hash = &proof.public_inputs[..4];
+    let hash = &proof.public_inputs[4..8];
+    let counter = proof.public_inputs[8];
+    let expected_hash: [F; 4] = iterate_poseidon(
+        initial_hash.try_into().unwrap(),
+        counter.to_canonical_u64() as usize,
+    );
+
+    // make sure the end result makes sense
+    if hash != expected_hash {
+        return Err(anyhow::Error::msg("hash was not calculated right"))
+    }
+
+    Ok(())
 }
