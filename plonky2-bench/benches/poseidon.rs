@@ -4,17 +4,13 @@ use plonky2::field::goldilocks_field::GoldilocksField;
 use plonky2::{
     field::types::PrimeField64,
     iop::witness::{PartialWitness, WitnessWrite},
-    plonk::{
-        config::PoseidonGoldilocksConfig, proof::ProofWithPublicInputs,
-    },
+    plonk::{config::PoseidonGoldilocksConfig, proof::ProofWithPublicInputs},
     recursion::{
         cyclic_recursion::check_cyclic_proof_verifier_data, dummy_circuit::cyclic_base_proof,
     },
 };
 use plonky2_bench::recursion::check_hash_value;
-use plonky2_bench::{
-    recursion::{init, iterate_poseidon, C, D, F},
-};
+use plonky2_bench::recursion::{init, iterate_poseidon, C, D, F};
 use plonky2_field::types::Field;
 
 criterion_group! {
@@ -92,7 +88,7 @@ fn bench_recursive_snark_proove(c: &mut Criterion) {
         println!("Number of constraints: {}", num_constr);
 
         check_hash_value(&proof).unwrap();
-        
+
         group.finish();
     }
 }

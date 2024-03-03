@@ -8,9 +8,7 @@ use plonky2::hash::poseidon::{PoseidonHash, PoseidonPermutation};
 use plonky2::iop::target::BoolTarget;
 use plonky2::iop::witness::{PartialWitness, WitnessWrite};
 use plonky2::plonk::circuit_builder::CircuitBuilder;
-use plonky2::plonk::circuit_data::{
-    CircuitConfig, CommonCircuitData, VerifierCircuitTarget,
-};
+use plonky2::plonk::circuit_data::{CircuitConfig, CommonCircuitData, VerifierCircuitTarget};
 use plonky2::plonk::config::{GenericConfig, PoseidonGoldilocksConfig};
 use plonky2::plonk::proof::{ProofWithPublicInputs, ProofWithPublicInputsTarget};
 use plonky2::recursion::cyclic_recursion::check_cyclic_proof_verifier_data;
@@ -42,7 +40,7 @@ pub fn recursion(d: usize) -> Result<()> {
     let d = d - 1;
 
     let (builder, common_data, condition, inner_cyclic_proof_with_pis, verifier_data_target) =
-            init(d)?;
+        init(d)?;
 
     let cyclic_circuit_data = builder.build::<C>();
 
@@ -173,7 +171,9 @@ pub fn iterate_poseidon<F: RichField>(initial_state: [F; 4], n: usize) -> [F; 4]
     current
 }
 
-pub fn check_hash_value(proof: &ProofWithPublicInputs<GoldilocksField, PoseidonGoldilocksConfig, D>) -> Result<()> {
+pub fn check_hash_value(
+    proof: &ProofWithPublicInputs<GoldilocksField, PoseidonGoldilocksConfig, D>,
+) -> Result<()> {
     let initial_hash = &proof.public_inputs[..4];
     let hash = &proof.public_inputs[4..8];
     let counter = proof.public_inputs[8];
@@ -184,7 +184,7 @@ pub fn check_hash_value(proof: &ProofWithPublicInputs<GoldilocksField, PoseidonG
 
     // make sure the end result makes sense
     if hash != expected_hash {
-        return Err(anyhow::Error::msg("hash was not calculated right"))
+        return Err(anyhow::Error::msg("hash was not calculated right"));
     }
 
     Ok(())
