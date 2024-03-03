@@ -34,6 +34,8 @@ fn bench_recursive_snark_proove(c: &mut Criterion) {
         let mut group = c.benchmark_group(format!("Plonky2-Poseidon-num-steps-{}", d));
         group.sample_size(10);
 
+        let d = d - 1;
+
         let (builder, common_data, condition, inner_cyclic_proof_with_pis, verifier_data_target) =
             init(d).unwrap();
 
@@ -113,6 +115,8 @@ fn bench_recursive_snark_verify(c: &mut Criterion) {
     for d in cases {
         let mut group = c.benchmark_group(format!("Plonky2-Poseidon-num-steps-{}", d));
         group.sample_size(10);
+
+        let d = d - 1;
 
         let (builder, common_data, condition, inner_cyclic_proof_with_pis, verifier_data_target) =
             init(d).unwrap();
