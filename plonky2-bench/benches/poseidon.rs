@@ -3,10 +3,8 @@ use criterion::*;
 use plonky2::field::goldilocks_field::GoldilocksField;
 use plonky2::{
     field::types::PrimeField64,
-    hash::{hash_types::HashOutTarget, poseidon::PoseidonHash},
     iop::witness::{PartialWitness, WitnessWrite},
     plonk::{
-        circuit_builder::CircuitBuilder, circuit_data::CircuitConfig,
         config::PoseidonGoldilocksConfig, proof::ProofWithPublicInputs,
     },
     recursion::{
@@ -14,8 +12,7 @@ use plonky2::{
     },
 };
 use plonky2_bench::{
-    common::common_data,
-    recursion::{init, iterate_poseidon, recursion, C, D, F},
+    recursion::{init, iterate_poseidon, C, D, F},
 };
 use plonky2_field::types::Field;
 
