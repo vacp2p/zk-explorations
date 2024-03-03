@@ -2,7 +2,6 @@ use core::time::Duration;
 use criterion::*;
 use plonky2::field::goldilocks_field::GoldilocksField;
 use plonky2::{
-    field::types::PrimeField64,
     iop::witness::{PartialWitness, WitnessWrite},
     plonk::{config::PoseidonGoldilocksConfig, proof::ProofWithPublicInputs},
     recursion::{
@@ -10,7 +9,7 @@ use plonky2::{
     },
 };
 use plonky2_bench::recursion::check_hash_value;
-use plonky2_bench::recursion::{init, iterate_poseidon, C, D, F};
+use plonky2_bench::recursion::{init, C, D, F};
 use plonky2_field::types::Field;
 
 criterion_group! {
