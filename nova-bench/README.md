@@ -14,3 +14,9 @@ One time:
 Then:
 
 `cargo run --example poseidon`
+
+## Usage
+
+```bash
+cargo bench
+```

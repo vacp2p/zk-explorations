@@ -10,16 +10,8 @@ ark-std = { version = "0.3", features = ["print-trace"] }
 ff = { version = "0.12.0", features = ["derive"]}
 num-bigint = { version = "0.4", features = ["serde", "rand"] }
 num-traits = "0.2.15"
-
-#nova-scotia = {git = "https://github.com/oskarth/Nova-Scotia", branch="benchmark-logging"}
-#nova-scotia = {path = "../../Nova-Scotia/"}
 nova-scotia = { git = "https://github.com/privacy-scaling-explorations/Nova-Scotia", branch = "parallel_nova" }
-#nova-scotia = {git = "https://github.com/oskarth/Nova-Scotia.git", branch="feat/r1cs-dual"}
-
 nova-snark = {git = "https://github.com/privacy-scaling-explorations/Nova", branch="parallel_prover_bench"}
-#nova-snark = { path = "../../Nova" }
-#nova-snark = { version = "0.19.0" }
-
 serde = "1.0"
 serde_json = "1.0.85"
 sha2 = "0.10.6"
@@ -27,3 +19,10 @@ wee_alloc = "0.4.5"
 light-poseidon = { version = "*", git = "https://github.com/tyshkor/light-poseidon.git", branch = "hash_vec"}
 ark-bn254 = "*"
 ark-ff = "*"
+
+[dev-dependencies]
+criterion = { version = "0.5", features = ["html_reports"] }
+
+[[bench]]
+name = "poseidon"
+harness = false
