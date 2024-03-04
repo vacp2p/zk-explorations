@@ -1,4 +1,4 @@
-use neptune::{poseidon::PoseidonConstants, Poseidon, poseidon_alt::hash_correct_multiple};
+use neptune::{poseidon::PoseidonConstants, poseidon_alt::hash_correct_multiple, Poseidon};
 use nova::traits::Group;
 
 use pasta_curves::Fq;
