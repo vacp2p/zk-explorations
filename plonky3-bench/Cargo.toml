@@ -1,0 +1,40 @@
+[package]
+name = "plonky3-bench"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+p3-air = { git = "https://github.com/Plonky3/Plonky3.git", version = "0.1.0" }
+p3-brakedown = { git = "https://github.com/Plonky3/Plonky3.git", version = "0.1.0" }
+p3-challenger = { git = "https://github.com/Plonky3/Plonky3.git", version = "0.1.0" }
+p3-commit = { git = "https://github.com/Plonky3/Plonky3.git", version = "0.1.0" }
+p3-dft = { git = "https://github.com/Plonky3/Plonky3.git", version = "0.1.0" }
+p3-field = { git = "https://github.com/Plonky3/Plonky3.git", version = "0.1.0" }
+p3-fri = { git = "https://github.com/Plonky3/Plonky3.git", version = "0.1.0" }
+p3-goldilocks = { git = "https://github.com/Plonky3/Plonky3.git", version = "0.1.0" }
+p3-matrix = { git = "https://github.com/Plonky3/Plonky3.git", version = "0.1.0" }
+p3-maybe-rayon = { git = "https://github.com/Plonky3/Plonky3.git", version = "0.1.0" }
+p3-mds = { git = "https://github.com/Plonky3/Plonky3.git", version = "0.1.0" }
+p3-merkle-tree = { git = "https://github.com/Plonky3/Plonky3.git", version = "0.1.0" }
+p3-poseidon = { git = "https://github.com/Plonky3/Plonky3.git", version = "0.1.0" }
+p3-symmetric = { git = "https://github.com/Plonky3/Plonky3.git", version = "0.1.0" }
+p3-uni-stark = { git = "https://github.com/Plonky3/Plonky3.git", version = "0.1.0" }
+p3-util = { git = "https://github.com/Plonky3/Plonky3.git", version = "0.1.0" }
+
+
+rand = "0.8.5"
+tracing = "0.1.37"
+tracing-subscriber = { version = "0.3.17", features = ["std", "env-filter"] }
+tracing-forest = { version = "0.1.6", features = ["ansi", "smallvec"] }
+p3-keccak-air = { git = "https://github.com/Plonky3/Plonky3.git", version = "0.1.0" }
+
+[[example]]
+name = "prove_goldilocks_poseidon"
+
+[features]
+# TODO: Consider removing, at least when this gets split off into another repository.
+# We should be able to enable p3-maybe-rayon/parallel directly; this just doesn't
+# seem to work when using cargo with the -p or --package option.
+parallel = ["p3-maybe-rayon/parallel"]
