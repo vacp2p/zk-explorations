@@ -7,6 +7,7 @@ use nova_bellman::{
 };
 use rand::SeedableRng;
 use rand_xorshift::XorShiftRng;
+use flate2::{write::ZlibEncoder, Compression};
 
 criterion_group! {
 name = recursive_snark;
@@ -92,6 +93,15 @@ fn bench_recursive_snark_verify(c: &mut Criterion) {
 
         let zi = calculate_chain_hash(initial_state, num_steps);
 
+        
+        let mut encoder = ZlibEncoder::new(Vec::new(), Compression::default());
+        bincode::serialize_into(&mut encoder, &recursive_snark.0).unwrap();
+        let snark_encoded = encoder.finish().unwrap();
+        println!(
+          "Nova Bellman SNARK::len {:?} bytes",
+          snark_encoded.len()
+        );
+    
         group.bench_function("Verify", |b| {
             b.iter(|| {
                 let res = recursive_snark.verify(&pp, num_steps, z0.clone(), &zi);
