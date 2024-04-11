@@ -5,6 +5,7 @@ use nova_scotia::{
 };
 use nova_snark::traits::Group;
 use std::{collections::HashMap, env::current_dir};
+use flate2::{write::ZlibEncoder, Compression};
 
 criterion_group! {
     name = recursive_snark;
@@ -131,6 +132,14 @@ fn bench_recursive_snark_verify(c: &mut Criterion) {
 
         let mut group = c.benchmark_group(format!("Nova-Circom-Poseidon-num-steps-{}", k));
         group.sample_size(10);
+
+        let mut encoder = ZlibEncoder::new(Vec::new(), Compression::default());
+        bincode::serialize_into(&mut encoder, &recursive_snark).unwrap();
+        let snark_encoded = encoder.finish().unwrap();
+        println!(
+          "Nova Circom SNARK::len {:?} bytes",
+          snark_encoded.len()
+        );
 
         group.bench_function("Verify", |b| {
             b.iter(|| {
