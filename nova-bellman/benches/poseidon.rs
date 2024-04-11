@@ -98,8 +98,9 @@ fn bench_recursive_snark_verify(c: &mut Criterion) {
         bincode::serialize_into(&mut encoder, &recursive_snark.0).unwrap();
         let snark_encoded = encoder.finish().unwrap();
         println!(
-          "Nova Bellman SNARK::len {:?} bytes",
-          snark_encoded.len()
+            "Nova Bellman SNARK::len {:?} bytes for case {:?}",
+            snark_encoded.len(),
+            num_steps
         );
     
         group.bench_function("Verify", |b| {
