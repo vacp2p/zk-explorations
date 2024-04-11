@@ -122,7 +122,7 @@ fn bench_recursive_snark_verify(c: &mut Criterion) {
         .unwrap();
         let proof = transcript.finalize();
 
-        group.bench_function("Prove", |b| {
+        group.bench_function("Verify", |b| {
             b.iter(|| {
                 // validate proof before caching
                 assert!({
