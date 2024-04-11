@@ -123,9 +123,10 @@ fn bench_recursive_snark_verify(c: &mut Criterion) {
         let proof = transcript.finalize();
 
         println!(
-            "Halo2 GWC SNARK::len {:?} bytes",
-            proof.len()
-          );
+            "Halo2 GWC SNARK::len {:?} bytes for case {:?}",
+            proof.len(),
+            k
+        );
 
         group.bench_function("Verify", |b| {
             b.iter(|| {
