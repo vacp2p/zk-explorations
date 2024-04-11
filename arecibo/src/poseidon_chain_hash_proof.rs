@@ -6,7 +6,7 @@ use crate::{
 
 use arecibo::{errors::NovaError, traits::Group, RecursiveSNARK};
 
-pub struct NovaChainHashProof(RecursiveSNARK<E1, E2, C1, C2>);
+pub struct NovaChainHashProof(pub RecursiveSNARK<E1, E2, C1, C2>);
 
 impl NovaChainHashProof {
     pub fn prove_recursively(
