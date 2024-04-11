@@ -122,6 +122,11 @@ fn bench_recursive_snark_verify(c: &mut Criterion) {
         .unwrap();
         let proof = transcript.finalize();
 
+        println!(
+            "Halo2 GWC SNARK::len {:?} bytes",
+            proof.len()
+          );
+
         group.bench_function("Verify", |b| {
             b.iter(|| {
                 // validate proof before caching
