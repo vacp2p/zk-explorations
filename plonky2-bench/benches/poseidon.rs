@@ -132,6 +132,12 @@ fn bench_recursive_snark_verify(c: &mut Criterion) {
             proof = cyclic_circuit_data.prove(pw).unwrap();
         }
 
+        println!(
+          "Plonky2 SNARK::len {:?} bytes for case {:?}",
+          proof.to_bytes().len(),
+          d + 1
+        );
+
         check_cyclic_proof_verifier_data(
             &proof,
             &cyclic_circuit_data.verifier_only,
