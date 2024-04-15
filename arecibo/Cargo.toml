@@ -17,6 +17,8 @@ subtle = "=2.5.0"
 bellpepper-core = { git="https://github.com/lurk-lab/bellpepper", branch="dev", default-features = false }
 bellpepper = { git="https://github.com/lurk-lab/bellpepper", branch="dev", default-features = false }
 rand_xorshift = "0.3.0"
+bincode = "1.3"
+flate2 = "1.0"
 
 [dev-dependencies]
 criterion = { version = "0.5", features = ["html_reports"] }

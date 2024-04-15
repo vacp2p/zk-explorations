@@ -102,7 +102,13 @@ fn bench_recursive_snark_verify(c: &mut Criterion) {
         .unwrap();
         let proof = transcript.finalize();
 
-        group.bench_function("Prove", |b| {
+        println!(
+            "Halo2 SHPLONK SNARK::len {:?} bytes for case {:?}",
+            proof.len(),
+            k
+        );
+
+        group.bench_function("Verify", |b| {
             b.iter(|| {
                 // validate proof before caching
                 assert!({
