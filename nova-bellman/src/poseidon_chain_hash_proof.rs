@@ -6,7 +6,7 @@ use crate::{
 
 use nova::{errors::NovaError, traits::Group, RecursiveSNARK};
 
-pub struct NovaChainHashProof(RecursiveSNARK<G1, G2, C1, C2>);
+pub struct NovaChainHashProof(pub RecursiveSNARK<G1, G2, C1, C2>);
 
 impl NovaChainHashProof {
     pub fn prove_recursively(
