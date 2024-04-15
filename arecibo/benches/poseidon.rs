@@ -2,6 +2,7 @@ use arecibo_bellman::{
     calculation::calculate_chain_hash, poseidon_chain_hash_proof::NovaChainHashProof,
     public_params::public_params, PoseidonHashChainCircuit, TEST_SEED,
 };
+use flate2::{write::ZlibEncoder, Compression};
 use core::time::Duration;
 use criterion::*;
 use ff::Field;
@@ -93,6 +94,15 @@ fn bench_recursive_snark_verify(c: &mut Criterion) {
             NovaChainHashProof::prove_recursively(&pp, &circuits, z0.clone()).unwrap();
 
         let zi = calculate_chain_hash(initial_state, num_steps);
+
+        let mut encoder = ZlibEncoder::new(Vec::new(), Compression::default());
+        bincode::serialize_into(&mut encoder, &recursive_snark.0).unwrap();
+        let snark_encoded = encoder.finish().unwrap();
+        println!(
+          "Arecibo SNARK::len {:?} bytes for case {:?}",
+          snark_encoded.len(),
+          num_steps
+        );
 
         group.bench_function("Verify", |b| {
             b.iter(|| {
